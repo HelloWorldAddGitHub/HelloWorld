@@ -28,15 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.halconWindow1 = new Halcon.Window.HalconWindow();
+            this.halconCamera1 = new Halcon.Camera.HalconCamera(this.components);
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(746, 9);
+            this.button1.Location = new System.Drawing.Point(548, 11);
             this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(85, 36);
@@ -48,7 +51,7 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(746, 63);
+            this.button2.Location = new System.Drawing.Point(548, 65);
             this.button2.Margin = new System.Windows.Forms.Padding(2);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(85, 38);
@@ -61,25 +64,42 @@
             // 
             this.halconWindow1.BackColor = System.Drawing.Color.Black;
             this.halconWindow1.BorderColor = System.Drawing.Color.Black;
+            this.halconWindow1.EnableContextMenu = true;
             this.halconWindow1.ImagePart = new System.Drawing.Rectangle(0, 0, 640, 480);
-            this.halconWindow1.Location = new System.Drawing.Point(13, 9);
+            this.halconWindow1.Location = new System.Drawing.Point(12, 9);
             this.halconWindow1.Name = "halconWindow1";
-            this.halconWindow1.Size = new System.Drawing.Size(709, 448);
+            this.halconWindow1.Size = new System.Drawing.Size(531, 448);
             this.halconWindow1.TabIndex = 3;
-            this.halconWindow1.WindowSize = new System.Drawing.Size(709, 448);
+            this.halconWindow1.WindowSize = new System.Drawing.Size(531, 448);
+            // 
+            // halconCamera1
+            // 
+            this.halconCamera1.InterfaceName = Halcon.Camera.HInterfaceName.DirectShow;
+            this.halconCamera1.ImageGrabbed += new System.EventHandler<Halcon.Camera.ImageGrabbedEventArgs>(this.halconCamera1_ImageGrabbed);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(638, 12);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(237, 185);
+            this.textBox1.TabIndex = 4;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(839, 469);
+            this.ClientSize = new System.Drawing.Size(887, 469);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.halconWindow1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -88,6 +108,10 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private Halcon.Window.HalconWindow halconWindow1;
+        private Halcon.Camera.HalconCamera halconCamera1;
+        private System.Windows.Forms.TextBox textBox1;
+        //private Halcon.Window.HalconWindow halconWindow1;
+        //private Halcon.Camera.HalconCamera halconCamera1;
     }
 }
 

@@ -2,7 +2,7 @@
 using System.Drawing;
 using HalconDotNet;
 
-namespace Camera
+namespace Halcon.Camera
 {
     public class ImageGrabbedEventArgs : EventArgs
     {
@@ -38,8 +38,8 @@ namespace Camera
             get
             {
                 HTuple MSecond, second, minute, hour, day, YDay, month, year;
-                HOperatorSet.GetImageTime(Image, 
-                    out MSecond, out second, out minute, out hour, out day, out YDay, out month, out year);
+                HOperatorSet.GetImageTime(Image, out MSecond, out second,
+                    out minute, out hour, out day, out YDay, out month, out year);
                 return new DateTime(year, month, day, hour, minute, second, MSecond);
             }
         }
