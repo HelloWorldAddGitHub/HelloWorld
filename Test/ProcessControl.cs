@@ -12,10 +12,15 @@ namespace Test
 {
     public partial class ProcessControl : TabPage
     {
-        public ProcessBase Process { get; set; }
+        private MainForm mainForm;
+        public Process Procedure { get; set; }
 
-        public ProcessControl()
+        public ProcessControl(string name, MainForm form)
         {
+            Name = Text = name;
+            mainForm = form;
+            Procedure = new Process(name);
+            
             InitializeComponent();
         }
 
@@ -109,7 +114,8 @@ namespace Test
 
                 sourceControl.Parent = this;
 
-                //Process.Add(sourceControl.Module);
+                sourceControl.Module.Process = Procedure;
+                Procedure.Add(sourceControl.Module);
             }
             else
             {
@@ -126,7 +132,8 @@ namespace Test
 
                 sourceControl.Parent = this;
 
-                //Process.Insert(sourceControl.UnitIndex, sourceControl.Module);
+                sourceControl.Module.Process = Procedure;
+                Procedure.Insert(sourceControl.Index, sourceControl.Module);
             }
             
         }
@@ -183,7 +190,21 @@ namespace Test
                 }
             }
 
-            //Process.Sort();
+            Procedure.Sort((m1,m2) =>
+            {
+                if (m1.Index > m2.Index)
+                {
+                    return 1;
+                }
+                else if (m1.Index < m2.Index)
+                {
+                    return -1;
+                }
+                else
+                {
+                    return 0;
+                }
+            });
         }
 
         public void RemoveModule(ModuleControl sourceControl)
@@ -197,7 +218,7 @@ namespace Test
                 }
             }
 
-            //Process.Remove(sourceControl.Module);
+            Procedure.Remove(sourceControl.Module);
 
             sourceControl.Dispose();
         }
@@ -233,6 +254,21 @@ namespace Test
             {
                 item.Size = new Size(width, item.Height);
             }
+        }
+
+        private void ProcessControl_TextChanged(object sender, EventArgs e)
+        {
+            Procedure.Name = Text;
+        }
+
+        private void ProcessControl_ControlAdded(object sender, ControlEventArgs e)
+        {
+
+        }
+
+        private void ProcessControl_ControlRemoved(object sender, ControlEventArgs e)
+        {
+
         }
     }
 }

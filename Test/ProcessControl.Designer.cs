@@ -35,7 +35,10 @@
             this.AllowDrop = true;
             this.AutoScroll = true;
             this.UseVisualStyleBackColor = true;
+            this.TextChanged += new System.EventHandler(this.ProcessControl_TextChanged);
             this.SizeChanged += new System.EventHandler(this.ProcessControl_SizeChanged);
+            this.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.ProcessControl_ControlAdded);
+            this.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.ProcessControl_ControlRemoved);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.TabProcess_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.TabProcess_DragEnter);
             this.ResumeLayout(false);

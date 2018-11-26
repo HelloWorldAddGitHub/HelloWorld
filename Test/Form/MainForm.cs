@@ -8,13 +8,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using HalconDotNet;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Test
 {
-    public partial class FormMain : Form
+    public partial class MainForm : Form
     {
-        FormImageWindow imageWindow;
+        public Project Projects { get; set; }
+
+
+
+
+        public ImageWindow imageWindow;
         ToolBox toolBox;
         ProcessBar processBar;
 
@@ -38,8 +44,10 @@ namespace Test
             toolStripButton5.Text = toolStripMenuItem6.Text;
         }
 
-        public FormMain()
+        public MainForm()
         {
+            Projects = new Project("Demo");
+
             InitializeComponent();
         }
 
@@ -48,15 +56,16 @@ namespace Test
             dockPanel1.Theme = new VS2015BlueTheme();
 
 
-            imageWindow = new FormImageWindow();
+            imageWindow = new ImageWindow();
             imageWindow.Show(dockPanel1);
 
-            processBar = new ProcessBar();
+            processBar = new ProcessBar(this);
             processBar.Show(dockPanel1, DockState.DockRight);
 
-            toolBox = new ToolBox();
+            toolBox = new ToolBox(this);
             toolBox.Show(processBar.Pane, DockAlignment.Left, 0.5);
 
+            
 
             string configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "DockPanel.config");
             if (File.Exists(configFile))
@@ -69,6 +78,13 @@ namespace Test
         {
             string configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "DockPanel.config");
             dockPanel1.SaveAsXml(configFile);
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            HWindowControl win = imageWindow.Window;
+            Projects.CurrentProcess.Start();
+            
         }
     }
 }

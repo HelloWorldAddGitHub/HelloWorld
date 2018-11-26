@@ -1,6 +1,6 @@
 ﻿namespace Test
 {
-    partial class FormMain
+    partial class MainForm
     {
         /// <summary>
         /// 必需的设计器变量。
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.dockPanel1 = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -48,18 +48,21 @@
             // 
             this.statusStrip1.BackColor = System.Drawing.SystemColors.Highlight;
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.statusStrip1.Location = new System.Drawing.Point(0, 522);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 341);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(778, 22);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 9, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(519, 22);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // dockPanel1
             // 
             this.dockPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dockPanel1.Location = new System.Drawing.Point(0, 64);
+            this.dockPanel1.DocumentStyle = WeifenLuo.WinFormsUI.Docking.DocumentStyle.DockingWindow;
+            this.dockPanel1.Location = new System.Drawing.Point(0, 43);
+            this.dockPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.dockPanel1.Name = "dockPanel1";
-            this.dockPanel1.Size = new System.Drawing.Size(778, 458);
+            this.dockPanel1.Size = new System.Drawing.Size(519, 298);
             this.dockPanel1.TabIndex = 5;
             // 
             // toolStrip1
@@ -75,7 +78,7 @@
             this.toolStripButton4});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(778, 64);
+            this.toolStrip1.Size = new System.Drawing.Size(519, 43);
             this.toolStrip1.TabIndex = 4;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -98,7 +101,7 @@
             // 
             this.toolStripMenuItem4.Image = global::Test.Properties.Resources.account_blue;
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(172, 36);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(128, 26);
             this.toolStripMenuItem4.Text = "操作员";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
@@ -106,7 +109,7 @@
             // 
             this.toolStripMenuItem5.Image = global::Test.Properties.Resources.account_yellow;
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(172, 36);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(128, 26);
             this.toolStripMenuItem5.Text = "调试员";
             this.toolStripMenuItem5.Click += new System.EventHandler(this.toolStripMenuItem5_Click);
             // 
@@ -114,7 +117,7 @@
             // 
             this.toolStripMenuItem6.Image = global::Test.Properties.Resources.account_red;
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(172, 36);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(128, 26);
             this.toolStripMenuItem6.Text = "管理员";
             this.toolStripMenuItem6.Click += new System.EventHandler(this.toolStripMenuItem6_Click);
             // 
@@ -137,6 +140,7 @@
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Size = new System.Drawing.Size(64, 61);
             this.toolStripButton1.Text = "toolStripButton1";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
             // toolStripButton2
             // 
@@ -168,18 +172,19 @@
             this.toolStripButton4.Size = new System.Drawing.Size(64, 61);
             this.toolStripButton4.Text = "toolStripButton4";
             // 
-            // FormMain
+            // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(778, 544);
+            this.ClientSize = new System.Drawing.Size(519, 363);
             this.Controls.Add(this.dockPanel1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
-            this.Name = "FormMain";
+            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Name = "MainForm";
             this.Text = "FormMain";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);

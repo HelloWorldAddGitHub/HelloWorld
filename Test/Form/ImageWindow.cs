@@ -7,13 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Halcon.Window;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Test
 {
-    public partial class FormImageWindow : DockContent
+    public partial class ImageWindow : DockContent
     {
-        public FormImageWindow()
+        public HalconWindow Window { get; set; } = new HalconWindow();
+
+        public ImageWindow()
         {
             InitializeComponent();
         }

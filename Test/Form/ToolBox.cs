@@ -13,8 +13,11 @@ namespace Test
 {
     public partial class ToolBox : DockContent
     {
-        public ToolBox()
+        private MainForm mainForm;
+
+        public ToolBox(MainForm form)
         {
+            mainForm = form;
             InitializeComponent();
         }
 
@@ -22,7 +25,9 @@ namespace Test
         {
             if (e.Button == MouseButtons.Left && treeView1.SelectedNode != null)
             {
-                treeView1.DoDragDrop(new ModuleControl(new ReadImage()), DragDropEffects.Move);
+                ReadImage ri = new ReadImage();
+                ri.ImageWindow = mainForm.imageWindow.Window;
+                treeView1.DoDragDrop(new ModuleControl(ri), DragDropEffects.Move);
             }
         }
 
