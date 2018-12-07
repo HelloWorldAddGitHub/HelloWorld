@@ -11,13 +11,13 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Test
 {
-    public partial class ProcessBar : DockContent
+    public partial class ProcessBarContent : DockContent
     {
         //private Project project;
 
         private MainForm mainForm;
 
-        public ProcessBar(MainForm form)
+        public ProcessBarContent(MainForm form)
         {
             mainForm = form;
             InitializeComponent();
@@ -75,7 +75,7 @@ namespace Test
                 return;
             }
 
-            TabTextEditForm ttef = new TabTextEditForm(tabControl1);
+            ProcessBarSetForm ttef = new ProcessBarSetForm(tabControl1);
             ttef.ShowDialog();
         }
 

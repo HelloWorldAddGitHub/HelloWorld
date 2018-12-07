@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Test
@@ -10,29 +11,68 @@ namespace Test
     {
         //public List<ModuleBase> Modules = new List<ModuleBase>();
         public string Name { get; set; }
-        
 
-        //public Project Project { get; set; }
+        //Task task;
+        private CancellationTokenSource cts = new CancellationTokenSource();
 
-        public Process(string name/*, Project project*/)
+        public Project Project { get; set; }
+
+        public Process(string name, Project project)
         {
             Name = name;
-            //Project = project;
+            Project = project;
         }
 
-        public bool Start()
-        {
-            foreach (var item in this)
-            {
-                item.Run();
-            }
 
-            return true;
+        public void RunOne()
+        {
+            cts.Cancel();
+            cts.Dispose();
+            cts = new CancellationTokenSource();
+
+            Task.Run(() =>
+            {
+                foreach (var item in this)
+                {
+                    if (cts.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    item.Run();
+                }
+            });
+        }
+
+
+        public void Start()
+        {
+            cts.Cancel();
+            cts.Dispose();
+            cts = new CancellationTokenSource();
+
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    foreach (var item in this)
+                    {
+                        if (cts.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
+                        item.Run();
+
+                        Thread.Sleep(200);
+                    }
+                }
+            });
         }
 
         public void Stop()
         {
-            
+            cts?.Cancel();
         }
     }
 }

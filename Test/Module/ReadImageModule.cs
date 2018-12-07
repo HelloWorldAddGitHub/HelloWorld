@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,22 +10,24 @@ using HalconDotNet;
 
 namespace Test
 {
-    public class ReadImage : ModuleBase
+    [Module("读入图像", "图像采集")]
+    public class ReadImageModule : ModuleBase
     {
         public HObject Image = new HObject();
         public HTuple fileName { get; set; } = new HTuple();
-
+        private int index;
+        
 
         public override string Name { get; set; } = "读入图像";
 
         //public override Form SetupForm { get; set; }
 
-        public ReadImage()
+        public ReadImageModule()
         {
 
         }
 
-        public ReadImage(Process process, HalconWindow window) : base(process, window)
+        public ReadImageModule(Process process, HalconWindow window) : base(process, window)
         {
 
         }
@@ -39,7 +42,15 @@ namespace Test
             //ImageWindow.ReadImage(fileName);
             //ImageWindow.DispObj(Image);
             //ImageWindow.Select();
-            ImageWindow.OpenImageDialog();
+            //ImageWindow.OpenImageDialog();
+
+            if (index >= fileName.TupleLength())
+            {
+                index = 0;
+            }
+
+            Image?.Dispose();
+            HWindow.ReadImage(fileName[index++]);
 
             return true;
         }

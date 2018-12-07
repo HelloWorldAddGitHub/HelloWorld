@@ -230,7 +230,7 @@ namespace Halcon.Camera
                         HOperatorSet.InfoFramegrabber(name, "parameters_writeonly", out information, out info.ParametersWriteonly);
 
                         HOperatorSet.InfoFramegrabber(name, "defaults", out information, out info.Defaults);
-                        HOperatorSet.InfoFramegrabber(name, "general", out information, out info.General);
+                        //HOperatorSet.InfoFramegrabber(name, "general", out information, out info.General);
                         HOperatorSet.InfoFramegrabber(name, "revision", out information, out info.Revision);
 
                         infoList.Add(info);

@@ -34,8 +34,16 @@ namespace Test
         [Browsable(false)]
         public int Index
         {
-            get { return Convert.ToInt32(labIndex.Text); }
-            set { labIndex.Text = value.ToString(); }
+            get
+            {
+                return Convert.ToInt32(labIndex.Text);
+                //return Module.Index;
+            }
+            set
+            {
+                labIndex.Text = value.ToString();
+                Module.Index = value;
+            }
         }
 
         [Browsable(false)]
@@ -102,6 +110,8 @@ namespace Test
             if (e.Data.GetDataPresent(typeof(ModuleControl)))
             {
                 e.Effect = e.AllowedEffect;
+
+                this.BackColor = Color.LightBlue;
             }
         }
 
@@ -171,6 +181,15 @@ namespace Test
             {
                 this.DoDragDrop(this, DragDropEffects.Move);
             }
+
+            if (e.X < 0 || e.X > this.Width || e.Y < 0 || e.Y > this.Height)
+            {
+                this.BackColor = System.Drawing.SystemColors.Control;
+            }
+            else
+            {
+                this.BackColor = Color.LightYellow;
+            }
         }
 
         private void ModuleBase_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -188,6 +207,10 @@ namespace Test
 
             Size = new Size(width, Size.Height);
         }
-        
+
+        private void ModuleControl_MouseLeave(object sender, EventArgs e)
+        {
+            this.BackColor = System.Drawing.SystemColors.Control;
+        }
     }
 }

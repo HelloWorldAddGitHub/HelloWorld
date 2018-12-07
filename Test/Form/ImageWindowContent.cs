@@ -12,11 +12,9 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Test
 {
-    public partial class ImageWindow : DockContent
+    public partial class ImageWindowContent : DockContent
     {
-        public HalconWindow Window { get; set; } = new HalconWindow();
-
-        public ImageWindow()
+        public ImageWindowContent()
         {
             InitializeComponent();
         }

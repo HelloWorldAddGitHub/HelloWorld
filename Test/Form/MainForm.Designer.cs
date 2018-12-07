@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.dockPanel1 = new WeifenLuo.WinFormsUI.Docking.DockPanel();
@@ -36,11 +37,13 @@
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
+            this.tsbRunOne = new System.Windows.Forms.ToolStripButton();
+            this.tsbStart = new System.Windows.Forms.ToolStripButton();
+            this.tsbReset = new System.Windows.Forms.ToolStripButton();
+            this.tsbStop = new System.Windows.Forms.ToolStripButton();
+            this.tsbSet = new System.Windows.Forms.ToolStripButton();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.visualStudioToolStripExtender1 = new WeifenLuo.WinFormsUI.Docking.VisualStudioToolStripExtender(this.components);
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,14 +71,15 @@
             // toolStrip1
             // 
             this.toolStrip1.AutoSize = false;
+            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton5,
-            this.toolStripButton6,
-            this.toolStripButton1,
-            this.toolStripButton2,
-            this.toolStripButton3,
-            this.toolStripButton4});
+            this.tsbRunOne,
+            this.tsbStart,
+            this.tsbStop,
+            this.tsbReset,
+            this.tsbSet});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(519, 43);
@@ -101,7 +105,7 @@
             // 
             this.toolStripMenuItem4.Image = global::Test.Properties.Resources.account_blue;
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(128, 26);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(160, 30);
             this.toolStripMenuItem4.Text = "操作员";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
@@ -109,7 +113,7 @@
             // 
             this.toolStripMenuItem5.Image = global::Test.Properties.Resources.account_yellow;
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(128, 26);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(160, 30);
             this.toolStripMenuItem5.Text = "调试员";
             this.toolStripMenuItem5.Click += new System.EventHandler(this.toolStripMenuItem5_Click);
             // 
@@ -117,60 +121,76 @@
             // 
             this.toolStripMenuItem6.Image = global::Test.Properties.Resources.account_red;
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(128, 26);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(160, 30);
             this.toolStripMenuItem6.Text = "管理员";
             this.toolStripMenuItem6.Click += new System.EventHandler(this.toolStripMenuItem6_Click);
             // 
-            // toolStripButton6
+            // tsbRunOne
             // 
-            this.toolStripButton6.AutoSize = false;
-            this.toolStripButton6.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton6.Image = global::Test.Properties.Resources.run_stop_blue;
-            this.toolStripButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton6.Name = "toolStripButton6";
-            this.toolStripButton6.Size = new System.Drawing.Size(64, 61);
-            this.toolStripButton6.Text = "toolStripButton6";
+            this.tsbRunOne.AutoSize = false;
+            this.tsbRunOne.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbRunOne.Image = ((System.Drawing.Image)(resources.GetObject("tsbRunOne.Image")));
+            this.tsbRunOne.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbRunOne.Name = "tsbRunOne";
+            this.tsbRunOne.Size = new System.Drawing.Size(64, 61);
+            this.tsbRunOne.Text = "执行一次";
+            this.tsbRunOne.Click += new System.EventHandler(this.tsbRunOne_Click);
             // 
-            // toolStripButton1
+            // tsbStart
             // 
-            this.toolStripButton1.AutoSize = false;
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = global::Test.Properties.Resources.start_blue;
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(64, 61);
-            this.toolStripButton1.Text = "toolStripButton1";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            this.tsbStart.AutoSize = false;
+            this.tsbStart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbStart.Image = ((System.Drawing.Image)(resources.GetObject("tsbStart.Image")));
+            this.tsbStart.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbStart.Name = "tsbStart";
+            this.tsbStart.Size = new System.Drawing.Size(64, 61);
+            this.tsbStart.Text = "开始";
+            this.tsbStart.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
-            // toolStripButton2
+            // tsbReset
             // 
-            this.toolStripButton2.AutoSize = false;
-            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(64, 61);
-            this.toolStripButton2.Text = "toolStripButton2";
+            this.tsbReset.AutoSize = false;
+            this.tsbReset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbReset.Image = ((System.Drawing.Image)(resources.GetObject("tsbReset.Image")));
+            this.tsbReset.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbReset.Name = "tsbReset";
+            this.tsbReset.Size = new System.Drawing.Size(64, 61);
+            this.tsbReset.Text = "重置";
             // 
-            // toolStripButton3
+            // tsbStop
             // 
-            this.toolStripButton3.AutoSize = false;
-            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
-            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(64, 61);
-            this.toolStripButton3.Text = "toolStripButton3";
+            this.tsbStop.AutoSize = false;
+            this.tsbStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbStop.Image = ((System.Drawing.Image)(resources.GetObject("tsbStop.Image")));
+            this.tsbStop.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbStop.Name = "tsbStop";
+            this.tsbStop.Size = new System.Drawing.Size(64, 61);
+            this.tsbStop.Text = "停止";
+            this.tsbStop.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
-            // toolStripButton4
+            // tsbSet
             // 
-            this.toolStripButton4.AutoSize = false;
-            this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton4.Image")));
-            this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton4.Name = "toolStripButton4";
-            this.toolStripButton4.Size = new System.Drawing.Size(64, 61);
-            this.toolStripButton4.Text = "toolStripButton4";
+            this.tsbSet.AutoSize = false;
+            this.tsbSet.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbSet.Image = ((System.Drawing.Image)(resources.GetObject("tsbSet.Image")));
+            this.tsbSet.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbSet.Name = "tsbSet";
+            this.tsbSet.Size = new System.Drawing.Size(64, 61);
+            this.tsbSet.Text = "设置";
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "one");
+            this.imageList1.Images.SetKeyName(1, "start");
+            this.imageList1.Images.SetKeyName(2, "stop");
+            this.imageList1.Images.SetKeyName(3, "reset");
+            this.imageList1.Images.SetKeyName(4, "set");
+            // 
+            // visualStudioToolStripExtender1
+            // 
+            this.visualStudioToolStripExtender1.DefaultRenderer = null;
             // 
             // MainForm
             // 
@@ -200,15 +220,17 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private WeifenLuo.WinFormsUI.Docking.DockPanel dockPanel1;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
-        private System.Windows.Forms.ToolStripButton toolStripButton2;
-        private System.Windows.Forms.ToolStripButton toolStripButton3;
-        private System.Windows.Forms.ToolStripButton toolStripButton4;
-        private System.Windows.Forms.ToolStripButton toolStripButton6;
+        private System.Windows.Forms.ToolStripButton tsbStart;
+        private System.Windows.Forms.ToolStripButton tsbReset;
+        private System.Windows.Forms.ToolStripButton tsbStop;
+        private System.Windows.Forms.ToolStripButton tsbSet;
+        private System.Windows.Forms.ToolStripButton tsbRunOne;
         private System.Windows.Forms.ToolStripDropDownButton toolStripButton5;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
+        private System.Windows.Forms.ImageList imageList1;
+        private WeifenLuo.WinFormsUI.Docking.VisualStudioToolStripExtender visualStudioToolStripExtender1;
     }
 }
 

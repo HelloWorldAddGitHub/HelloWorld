@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -18,13 +19,13 @@ namespace Test
         public Project Projects { get; set; }
 
 
+        public ImageWindowContent imageWindow;
+        public ToolBoxContent toolBox;
+        public ProcessBarContent processBar;
 
-
-        public ImageWindow imageWindow;
-        ToolBox toolBox;
-        ProcessBar processBar;
 
         //private DeserializeDockContent m_deserializeDockContent;
+
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
@@ -49,30 +50,89 @@ namespace Test
             Projects = new Project("Demo");
 
             InitializeComponent();
+
+            //m_deserializeDockContent = new DeserializeDockContent(GetContentFromPersistString);
+            //m_deserializeDockContent += GetContentFromPersistString;
         }
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-            dockPanel1.Theme = new VS2015BlueTheme();
+            SetTheme(new VS2015BlueTheme());
 
+            CreateContents();
 
-            imageWindow = new ImageWindow();
-            imageWindow.Show(dockPanel1);
+            LoadContents();
+        }
 
-            processBar = new ProcessBar(this);
-            processBar.Show(dockPanel1, DockState.DockRight);
+        private void SetTheme(ThemeBase themeBase)
+        {
+            dockPanel1.Theme = themeBase;
+            visualStudioToolStripExtender1.SetStyle(toolStrip1, VisualStudioToolStripExtender.VsVersion.Vs2015, dockPanel1.Theme);
+            visualStudioToolStripExtender1.SetStyle(statusStrip1, VisualStudioToolStripExtender.VsVersion.Vs2015, dockPanel1.Theme);
+            statusStrip1.BackColor = dockPanel1.Theme.ColorPalette.MainWindowStatusBarDefault.Background;
+        }
 
-            toolBox = new ToolBox(this);
-            toolBox.Show(processBar.Pane, DockAlignment.Left, 0.5);
-
-            
-
+        private void LoadContents()
+        {
             string configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "DockPanel.config");
+
             if (File.Exists(configFile))
             {
-                //dockPanel1.LoadFromXml(configFile, m_deserializeDockContent);
+                dockPanel1.LoadFromXml(configFile, (persistString) =>
+                {
+                    foreach (var field in GetType().GetFields())
+                    {
+                        if (field.FieldType.ToString() == persistString)
+                        {
+                            return (IDockContent)field.GetValue(this);
+                        }
+                    }
+
+                    return null;
+                });
+            }
+
+            foreach (var field in GetType().GetFields())
+            {
+                if (field.FieldType.ToString().IndexOf("Content") > 0)
+                {
+                    DockContent dc = (DockContent)field.GetValue(this);
+
+                    if (dc.DockPanel == null)
+                    {
+                        dc.Show(this.dockPanel1, DockState.DockBottom);
+                    }
+                    else
+                    {
+                        dc.Show();
+                    }
+                }
             }
         }
+
+        private void CreateContents()
+        {
+            imageWindow = new ImageWindowContent();
+
+            processBar = new ProcessBarContent(this);
+            toolBox = new ToolBoxContent(this);
+        }
+
+        //private IDockContent GetContentFromPersistString(string persistString)
+        //{
+        //    FieldInfo[] info = GetType().GetFields();
+
+        //    foreach (var item in info)
+        //    {
+        //        if (item.FieldType.ToString() == persistString)
+        //        {
+        //            return (IDockContent)item.GetValue(this);
+        //        }
+        //    }
+
+        //    return null;
+        //}
+
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -82,9 +142,17 @@ namespace Test
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            HWindowControl win = imageWindow.Window;
             Projects.CurrentProcess.Start();
-            
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            Projects.CurrentProcess.Stop();
+        }
+
+        private void tsbRunOne_Click(object sender, EventArgs e)
+        {
+            Projects.CurrentProcess.RunOne();
         }
     }
 }

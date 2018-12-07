@@ -46,7 +46,7 @@
             this.labText.Location = new System.Drawing.Point(64, 12);
             this.labText.Margin = new System.Windows.Forms.Padding(0);
             this.labText.Name = "labText";
-            this.labText.Size = new System.Drawing.Size(110, 31);
+            this.labText.Size = new System.Drawing.Size(74, 21);
             this.labText.TabIndex = 2;
             this.labText.Text = "单元模块";
             this.labText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -112,7 +112,7 @@
             // ModuleControl
             // 
             this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 31F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -126,7 +126,9 @@
             this.Size = new System.Drawing.Size(256, 48);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.ModuleBase_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.ModuleBase_DragEnter);
+            this.DragLeave += new System.EventHandler(this.ModuleControl_MouseLeave);
             this.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ModuleBase_MouseDoubleClick);
+            this.MouseLeave += new System.EventHandler(this.ModuleControl_MouseLeave);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ModuleBase_MouseMove);
             this.ParentChanged += new System.EventHandler(this.ModuleBase_ParentChanged);
             this.ResumeLayout(false);

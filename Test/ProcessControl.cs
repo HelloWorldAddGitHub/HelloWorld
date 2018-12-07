@@ -19,7 +19,7 @@ namespace Test
         {
             Name = Text = name;
             mainForm = form;
-            Procedure = new Process(name);
+            Procedure = new Process(name, mainForm.Projects);
             
             InitializeComponent();
         }
@@ -134,6 +134,8 @@ namespace Test
 
                 sourceControl.Module.Process = Procedure;
                 Procedure.Insert(sourceControl.Index, sourceControl.Module);
+
+                SortModule();
             }
             
         }
@@ -143,7 +145,7 @@ namespace Test
             if (targetControl == null)
             {
                 ModuleControl lastControl = LastModule();
-                
+
                 if (lastControl != sourceControl)
                 {
                     foreach (ModuleControl item in Controls)
@@ -157,7 +159,7 @@ namespace Test
 
                     sourceControl.Index = lastControl.Index + 1;
                     sourceControl.Location = new Point(sourceControl.Location.X, lastControl.Location.Y + lastControl.Height);
-                    
+
                 }
             }
             else
@@ -190,7 +192,12 @@ namespace Test
                 }
             }
 
-            Procedure.Sort((m1,m2) =>
+            SortModule();
+        }
+
+        private void SortModule()
+        {
+            Procedure.Sort((m1, m2) =>
             {
                 if (m1.Index > m2.Index)
                 {
@@ -221,6 +228,8 @@ namespace Test
             Procedure.Remove(sourceControl.Module);
 
             sourceControl.Dispose();
+
+            SortModule();
         }
 
         public ModuleControl LastModule()

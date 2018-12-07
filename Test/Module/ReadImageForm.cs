@@ -12,8 +12,8 @@ namespace Test
 {
     public partial class ReadImageForm : Form
     {
-        ReadImage ri;
-        public ReadImageForm(ReadImage module)
+        ReadImageModule ri;
+        public ReadImageForm(ReadImageModule module)
         {
             ri = module;
             InitializeComponent();
@@ -22,11 +22,20 @@ namespace Test
         private void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Multiselect = true;
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                textBox1.Text = ofd.FileName;
-                ri.fileName = ofd.FileName.Replace("\\", "/");
+                //ri.fileName = ofd.FileNames;
+                textBox1.Text = ofd.FileNames[0];
+                //ri.fileName = ofd.FileName.Replace("\\", "/");
+
+                ri.fileName = new HalconDotNet.HTuple();
+                foreach (var item in ofd.FileNames)
+                {
+                    ri.fileName.Append(item.Replace("\\", "/"));
+                }
+
             }
         }
     }

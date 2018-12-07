@@ -1,6 +1,6 @@
 ﻿namespace Test
 {
-    partial class ToolBox
+    partial class ToolBoxContent
     {
         /// <summary>
         /// Required designer variable.
@@ -29,10 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Halcon采集");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("采集设备", new System.Windows.Forms.TreeNode[] {
-            treeNode1});
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ToolBox));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ToolBoxContent));
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.SuspendLayout();
@@ -41,34 +38,40 @@
             // 
             this.treeView1.AllowDrop = true;
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.treeView1.FullRowSelect = true;
+            this.treeView1.ImageIndex = 0;
+            this.treeView1.ImageList = this.imageList1;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
+            this.treeView1.Margin = new System.Windows.Forms.Padding(2);
             this.treeView1.Name = "treeView1";
-            treeNode1.Name = "Halcon";
-            treeNode1.Text = "Halcon采集";
-            treeNode2.Name = "Device";
-            treeNode2.Text = "采集设备";
-            this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
-            this.treeView1.Size = new System.Drawing.Size(278, 844);
+            this.treeView1.SelectedImageIndex = 0;
+            this.treeView1.ShowLines = false;
+            this.treeView1.ShowRootLines = false;
+            this.treeView1.Size = new System.Drawing.Size(184, 564);
             this.treeView1.TabIndex = 0;
             this.treeView1.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeView1_DragEnter);
-            this.treeView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseDown);
+            this.treeView1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseMove);
             // 
             // imageList1
             // 
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "Triangle-right.png");
-            this.imageList1.Images.SetKeyName(1, "Triangle-down.png");
+            this.imageList1.Images.SetKeyName(0, "Tools");
+            this.imageList1.Images.SetKeyName(1, "RightArrow");
+            this.imageList1.Images.SetKeyName(2, "DownArrow");
             // 
-            // ToolBox
+            // ToolBoxContent
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(278, 844);
+            this.ClientSize = new System.Drawing.Size(184, 564);
             this.Controls.Add(this.treeView1);
-            this.Name = "ToolBox";
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Name = "ToolBoxContent";
             this.Text = "工具箱";
+            this.Load += new System.EventHandler(this.ToolBox_Load);
             this.ResumeLayout(false);
 
         }

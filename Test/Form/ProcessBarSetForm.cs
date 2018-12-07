@@ -10,11 +10,11 @@ using System.Windows.Forms;
 
 namespace Test
 {
-    public partial class TabTextEditForm : Form
+    public partial class ProcessBarSetForm : Form
     {
         TabControl tab;
 
-        public TabTextEditForm(TabControl tab)
+        public ProcessBarSetForm(TabControl tab)
         {
             InitializeComponent();
             this.tab = tab;
