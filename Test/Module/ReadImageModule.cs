@@ -14,7 +14,7 @@ namespace Test
     public class ReadImageModule : ModuleBase
     {
         public HObject Image = new HObject();
-        public HTuple fileName { get; set; } = new HTuple();
+        public HTuple fileName = new HTuple();
         private int index;
         
 

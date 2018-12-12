@@ -13,13 +13,13 @@ namespace Test
     public partial class ProcessControl : TabPage
     {
         private MainForm mainForm;
-        public Process Procedure { get; set; }
+        public Process Processes { get; set; }
 
         public ProcessControl(string name, MainForm form)
         {
             Name = Text = name;
             mainForm = form;
-            Procedure = new Process(name, mainForm.Projects);
+            Processes = new Process(name, mainForm.Projects);
             
             InitializeComponent();
         }
@@ -114,8 +114,8 @@ namespace Test
 
                 sourceControl.Parent = this;
 
-                sourceControl.Module.Process = Procedure;
-                Procedure.Add(sourceControl.Module);
+                sourceControl.Module.Process = Processes;
+                Processes.Add(sourceControl.Module);
             }
             else
             {
@@ -132,8 +132,8 @@ namespace Test
 
                 sourceControl.Parent = this;
 
-                sourceControl.Module.Process = Procedure;
-                Procedure.Insert(sourceControl.Index, sourceControl.Module);
+                sourceControl.Module.Process = Processes;
+                Processes.Insert(sourceControl.Index, sourceControl.Module);
 
                 SortModule();
             }
@@ -197,7 +197,7 @@ namespace Test
 
         private void SortModule()
         {
-            Procedure.Sort((m1, m2) =>
+            Processes.Sort((m1, m2) =>
             {
                 if (m1.Index > m2.Index)
                 {
@@ -225,7 +225,7 @@ namespace Test
                 }
             }
 
-            Procedure.Remove(sourceControl.Module);
+            Processes.Remove(sourceControl.Module);
 
             sourceControl.Dispose();
 
@@ -267,7 +267,7 @@ namespace Test
 
         private void ProcessControl_TextChanged(object sender, EventArgs e)
         {
-            Procedure.Name = Text;
+            Processes.Name = Text;
         }
 
         private void ProcessControl_ControlAdded(object sender, ControlEventArgs e)

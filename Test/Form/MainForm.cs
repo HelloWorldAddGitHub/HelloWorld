@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using HalconDotNet;
+using Microsoft.Win32;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Test
@@ -45,11 +46,19 @@ namespace Test
             toolStripButton5.Text = toolStripMenuItem6.Text;
         }
 
-        public MainForm()
+        public MainForm(string[] args)
         {
+            RegFileExt();
+
             Projects = new Project("Demo");
 
             InitializeComponent();
+
+            if (args.Length > 0)
+            {
+                imageWindow = new ImageWindowContent();
+                processBar = new ProcessBarContent(this, args[0]);
+            }
 
             //m_deserializeDockContent = new DeserializeDockContent(GetContentFromPersistString);
             //m_deserializeDockContent += GetContentFromPersistString;
@@ -63,6 +72,45 @@ namespace Test
 
             LoadContents();
         }
+
+
+        private void RegFileExt()
+        {
+            string extName = ".vs";
+            string typeName = "Vision";
+            string iconPath = Application.StartupPath + "\\vision.ico";
+            string commandPath = Application.ExecutablePath + " \"%1\"";
+            
+
+            RegistryKey key = Registry.ClassesRoot.OpenSubKey(typeName);
+
+            if (key == null)
+            {
+                RegistryKey regExt = Registry.ClassesRoot.CreateSubKey(extName);
+                regExt.SetValue("", typeName);
+
+                RegistryKey regType = Registry.ClassesRoot.CreateSubKey(typeName);
+                RegistryKey regIcon = regType.CreateSubKey("DefaultIcon");
+                regIcon.SetValue("", iconPath);
+
+                RegistryKey regCom = regType.CreateSubKey("Shell\\Open\\Command");
+                regCom.SetValue("", commandPath);
+            }
+            else
+            {
+                RegistryKey reg = key.OpenSubKey("Shell\\Open\\Command", true);
+
+                if (reg != null && (reg.GetValue("") == null || reg.GetValue("").ToString() != commandPath))
+                {
+                    RegistryKey regIcon = key.OpenSubKey("DefaultIcon", true);
+                    regIcon.SetValue("", iconPath);
+                    reg.SetValue("", commandPath);
+                }
+                
+            }
+            
+        }
+
 
         private void SetTheme(ThemeBase themeBase)
         {
@@ -112,9 +160,12 @@ namespace Test
 
         private void CreateContents()
         {
-            imageWindow = new ImageWindowContent();
-
-            processBar = new ProcessBarContent(this);
+            if (processBar == null)
+            {
+                imageWindow = new ImageWindowContent();
+                processBar = new ProcessBarContent(this, null);
+            }
+            
             toolBox = new ToolBoxContent(this);
         }
 
@@ -142,17 +193,17 @@ namespace Test
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            Projects.CurrentProcess.Start();
+            Projects.MainProcess.Start();
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
-            Projects.CurrentProcess.Stop();
+            Projects.MainProcess.Stop();
         }
 
         private void tsbRunOne_Click(object sender, EventArgs e)
         {
-            Projects.CurrentProcess.RunOne();
+            Projects.MainProcess.RunOne();
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Test
             }
         }
 
-        public Process CurrentProcess { get; set; }
+        public Process MainProcess { get; set; }
 
         public Project(string name)
         {

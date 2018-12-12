@@ -51,25 +51,29 @@ namespace Test
         {
             get
             {
-                if (labStatus.Image.Equals(imgStatus.Images["Disable"]))
-                {
-                    return ModuleStatus.Disable;
-                }
-                else if (labStatus.Image.Equals(imgStatus.Images["OK"]))
-                {
-                    return ModuleStatus.OK;
-                }
-                else if (labStatus.Image.Equals(imgStatus.Images["NG"]))
-                {
-                    return ModuleStatus.NG;
-                }
-                else
-                {
-                    return ModuleStatus.Null;
-                }
+                return Module.Status;
+
+                //if (labStatus.Image.Equals(imgStatus.Images["Disable"]))
+                //{
+                //    return ModuleStatus.Disable;
+                //}
+                //else if (labStatus.Image.Equals(imgStatus.Images["OK"]))
+                //{
+                //    return ModuleStatus.OK;
+                //}
+                //else if (labStatus.Image.Equals(imgStatus.Images["NG"]))
+                //{
+                //    return ModuleStatus.NG;
+                //}
+                //else
+                //{
+                //    return ModuleStatus.Null;
+                //}
             }
             set
             {
+                Module.Status = value;
+
                 switch (value)
                 {
                     case ModuleStatus.Null:
@@ -92,7 +96,7 @@ namespace Test
             }
         }
 
-        public enum ModuleStatus { Null, Disable, OK, NG }
+        
 
         
 
@@ -102,6 +106,8 @@ namespace Test
             Module = module;
             InitializeComponent();
             Text = Module.Name;
+            Index = module.Index;
+            Status = module.Status;
             //Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         }
         

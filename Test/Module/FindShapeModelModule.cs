@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using Halcon.Window;
 using HalconDotNet;
 
@@ -59,31 +62,6 @@ namespace Test.Module
         {
             FindShapeModelForm f = new FindShapeModelForm(this);
             f.ShowDialog();
-        }
-
-
-        public HObject GetHObject(string path)
-        {
-            string[] array = path.Split('.');
-
-            if (array.Length != 3 || array[2] == "(集合)")
-            {
-                return null;
-            }
-
-            string process = array[0];
-            int index = Convert.ToInt32(array[1].Split('[', ']')[1]) - 1;
-            string name = array[2];
-
-            foreach (var item in Process.Project)
-            {
-                if (item.Name == process)
-                {
-                    return item[index].OutHObjectParams[name];
-                }
-            }
-
-            return null;
         }
     }
 }
