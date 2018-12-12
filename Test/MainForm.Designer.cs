@@ -103,7 +103,7 @@
             // 
             // toolStripMenuItem4
             // 
-            this.toolStripMenuItem4.Image = global::Test.Properties.Resources.account_blue;
+            //this.toolStripMenuItem4.Image = global::VisionModule.Properties.Resources.account_blue;
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
             this.toolStripMenuItem4.Size = new System.Drawing.Size(160, 30);
             this.toolStripMenuItem4.Text = "操作员";
@@ -111,7 +111,7 @@
             // 
             // toolStripMenuItem5
             // 
-            this.toolStripMenuItem5.Image = global::Test.Properties.Resources.account_yellow;
+            //this.toolStripMenuItem5.Image = global::VisionModule.Properties.Resources.account_yellow;
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
             this.toolStripMenuItem5.Size = new System.Drawing.Size(160, 30);
             this.toolStripMenuItem5.Text = "调试员";
@@ -119,7 +119,7 @@
             // 
             // toolStripMenuItem6
             // 
-            this.toolStripMenuItem6.Image = global::Test.Properties.Resources.account_red;
+            //this.toolStripMenuItem6.Image = global::VisionModule.Properties.Resources.account_red;
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
             this.toolStripMenuItem6.Size = new System.Drawing.Size(160, 30);
             this.toolStripMenuItem6.Text = "管理员";

@@ -1,4 +1,4 @@
-﻿namespace Test.Module
+﻿namespace VisionModule.Module
 {
     partial class HFramegrabberForm
     {

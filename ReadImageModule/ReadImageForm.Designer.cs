@@ -1,4 +1,4 @@
-﻿namespace VisionModule
+﻿namespace Module
 {
     partial class ReadImageForm
     {

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using HalconDotNet;
 using Microsoft.Win32;
+using Module;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Test
@@ -48,7 +49,7 @@ namespace Test
 
         public MainForm(string[] args)
         {
-            RegFileExt();
+            //RegFileExt();
 
             Projects = new Project("Demo");
 

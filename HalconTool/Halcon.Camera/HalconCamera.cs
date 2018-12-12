@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
 using HalconDotNet;
 
@@ -9,17 +10,7 @@ namespace Halcon.Camera
     [DefaultEvent("DataReceived")]
     public partial class HalconCamera : Component
     {
-        public HalconCamera()
-        {
-            InitializeComponent();
-        }
 
-        public HalconCamera(IContainer container)
-        {
-            container.Add(this);
-
-            InitializeComponent();
-        }
 
 
         public HInterfaceInfo InterfaceInfo = new HInterfaceInfo(HInterfaceName.File);
@@ -141,12 +132,12 @@ namespace Halcon.Camera
 
         [Browsable(false)]
         [Description("获取相机是否打开")]
-        public bool IsOpen { get; private set; }
+        public bool IsOpen;
 
 
 
-        private bool isGrabbing;
-        private HObject image;
+        private CancellationTokenSource grabCancelToken;
+        //private HObject image;
         private HTuple acqHandle;
 
 
@@ -154,10 +145,22 @@ namespace Halcon.Camera
         /// <summary>
         /// 图像采集完成处理事件
         /// </summary>
-        [Browsable(true)]
-        [Description("图像采集完成处理事件")]
-        public event EventHandler<ImageGrabbedEventArgs> ImageGrabbed;
+        //[Browsable(true)]
+        //[Description("图像采集完成处理事件")]
+        //public event EventHandler<ImageGrabbedEventArgs> ImageGrabbed;
 
+        public HalconCamera()
+        {
+            InitializeComponent();
+        }
+
+
+        public HalconCamera(IContainer container)
+        {
+            container.Add(this);
+
+            InitializeComponent();
+        }
 
 
         public HalconCamera(HCameraInfo info)
@@ -178,6 +181,8 @@ namespace Halcon.Camera
             Device = info.Device;
             Port = info.Port;
             LineIn = info.LineIn;
+
+            InitializeComponent();
         }
 
         ~HalconCamera()
@@ -229,9 +234,9 @@ namespace Halcon.Camera
                         HOperatorSet.InfoFramegrabber(name, "parameters_readonly", out information, out info.ParametersReadonly);
                         HOperatorSet.InfoFramegrabber(name, "parameters_writeonly", out information, out info.ParametersWriteonly);
 
-                        HOperatorSet.InfoFramegrabber(name, "defaults", out information, out info.Defaults);
+                        //HOperatorSet.InfoFramegrabber(name, "defaults", out information, out info.Defaults);
                         //HOperatorSet.InfoFramegrabber(name, "general", out information, out info.General);
-                        HOperatorSet.InfoFramegrabber(name, "revision", out information, out info.Revision);
+                        //HOperatorSet.InfoFramegrabber(name, "revision", out information, out info.Revision);
 
                         infoList.Add(info);
                     }
@@ -316,36 +321,47 @@ namespace Halcon.Camera
         /// 同步采集一帧图像
         /// </summary>
         /// <returns></returns>
-        public bool GrabOne()
+        public HObject GrabOne()
         {
             try
             {
-                image?.Dispose();
+                HObject image;
                 HOperatorSet.GrabImage(out image, acqHandle);
-                ImageGrabbed?.Invoke(this, new ImageGrabbedEventArgs(image));
+                return image;
             }
             catch (Exception)
             {
-                return false;
+                return null;
             }
+        }
 
-            return true;
+
+        /// <summary>
+        /// 同步采集一帧图像
+        /// </summary>
+        /// <returns></returns>
+        public void GrabOne(Action<HObject> action)
+        {
+            try
+            {
+                HObject image;
+                HOperatorSet.GrabImage(out image, acqHandle);
+                action(image);
+            }
+            catch (Exception)
+            {
+                return;
+            }
         }
 
 
         /// <summary>
         /// 异步连续采集图像
         /// </summary>
-        public async void GrabStartAsync()
+        public async void GrabStartAsync(Action<HObject> action)
         {
-            if (isGrabbing)
-            {
-                return;
-            }
-            else
-            {
-                isGrabbing = true;
-            }
+            grabCancelToken?.Cancel();
+            grabCancelToken = new CancellationTokenSource();
 
             await Task.Run(() =>
             {
@@ -353,16 +369,16 @@ namespace Halcon.Camera
                 {
                     HOperatorSet.GrabImageStart(acqHandle, MaxDelay);
 
-                    while (isGrabbing)
+                    while (!grabCancelToken.IsCancellationRequested)
                     {
-                        image?.Dispose();
+                        HObject image;
                         HOperatorSet.GrabImageAsync(out image, acqHandle, MaxDelay);
-                        ImageGrabbed?.Invoke(this, new ImageGrabbedEventArgs(image));
+                        action(image);
                     }
                 }
                 catch (Exception)
                 {
-                    isGrabbing = false;
+                    
                 }
             });
         }
@@ -373,7 +389,7 @@ namespace Halcon.Camera
         /// </summary>
         public void GrabStop()
         {
-            isGrabbing = false;
+            grabCancelToken.Cancel();
         }
 
 
@@ -384,11 +400,7 @@ namespace Halcon.Camera
         {
             if (IsOpen)
             {
-                if (isGrabbing)
-                {
-                    isGrabbing = false;
-                }
-
+                grabCancelToken?.Cancel();
                 IsOpen = false;
 
                 HOperatorSet.CloseFramegrabber(acqHandle);

@@ -65,56 +65,31 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form\ImageWindowContent.cs">
+    <Compile Include="ImageWindowContent.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\ImageWindowContent.Designer.cs">
+    <Compile Include="ImageWindowContent.Designer.cs">
       <DependentUpon>ImageWindowContent.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\MainForm.cs">
+    <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\MainForm.Designer.cs">
+    <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ModuleAttribute.cs" />
-    <Compile Include="Module\FindShapeModelForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Module\FindShapeModelForm.Designer.cs">
-      <DependentUpon>FindShapeModelForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Module\FindShapeModelModule.cs" />
-    <Compile Include="Module\HFramegrabberModule.cs" />
-    <Compile Include="Module\HFramegrabberForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Module\HFramegrabberForm.Designer.cs">
-      <DependentUpon>HFramegrabberForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Module\ModuleBase.cs" />
-    <Compile Include="Module\ModuleControl.cs">
+    <Compile Include="ModuleControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Module\ModuleControl.Designer.cs">
+    <Compile Include="ModuleControl.Designer.cs">
       <DependentUpon>ModuleControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Module\ReadImageModule.cs" />
-    <Compile Include="Module\ReadImageForm.cs">
+    <Compile Include="ProcessBarContent.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Module\ReadImageForm.Designer.cs">
-      <DependentUpon>ReadImageForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Process.cs" />
-    <Compile Include="Form\ProcessBarContent.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form\ProcessBarContent.Designer.cs">
+    <Compile Include="ProcessBarContent.Designer.cs">
       <DependentUpon>ProcessBarContent.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProcessControl.cs">
       <SubType>Component</SubType>
@@ -122,38 +97,29 @@
     <Compile Include="ProcessControl.Designer.cs">
       <DependentUpon>ProcessControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\ProcessBarSetForm.cs">
+    <Compile Include="ProcessBarSetForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\ProcessBarSetForm.Designer.cs">
+    <Compile Include="ProcessBarSetForm.Designer.cs">
       <DependentUpon>ProcessBarSetForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\ToolBoxContent.cs">
+    <Compile Include="ToolBoxContent.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\ToolBoxContent.Designer.cs">
+    <Compile Include="ToolBoxContent.Designer.cs">
       <DependentUpon>ToolBoxContent.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Form\ImageWindowContent.resx">
+    <EmbeddedResource Include="ImageWindowContent.resx">
       <DependentUpon>ImageWindowContent.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\MainForm.resx">
+    <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Module\FindShapeModelForm.resx">
-      <DependentUpon>FindShapeModelForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Module\HFramegrabberForm.resx">
-      <DependentUpon>HFramegrabberForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Module\ModuleControl.resx">
+    <EmbeddedResource Include="ModuleControl.resx">
       <DependentUpon>ModuleControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\ProcessBarContent.resx">
+    <EmbeddedResource Include="ProcessBarContent.resx">
       <DependentUpon>ProcessBarContent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Module\ReadImageForm.resx">
-      <DependentUpon>ReadImageForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -168,10 +134,10 @@
     <EmbeddedResource Include="ProcessControl.resx">
       <DependentUpon>ProcessControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\ProcessBarSetForm.resx">
+    <EmbeddedResource Include="ProcessBarSetForm.resx">
       <DependentUpon>ProcessBarSetForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\ToolBoxContent.resx">
+    <EmbeddedResource Include="ToolBoxContent.resx">
       <DependentUpon>ToolBoxContent.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
@@ -192,6 +158,10 @@
     <ProjectReference Include="..\HalconTool\HalconTool.csproj">
       <Project>{D1EE9AE5-04A9-49B2-B455-F4D2F0E724CA}</Project>
       <Name>HalconTool</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModuleBase\ModuleBase.csproj">
+      <Project>{56897B23-E228-43C2-81F0-68A9EAD8C7C3}</Project>
+      <Name>ModuleBase</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

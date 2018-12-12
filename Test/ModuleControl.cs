@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections;
+using Module;
 
 namespace Test
 {
@@ -46,55 +47,55 @@ namespace Test
             }
         }
 
-        [Browsable(false)]
-        public ModuleStatus Status
-        {
-            get
-            {
-                return Module.Status;
+        //[Browsable(false)]
+        //public ModuleStatus Status
+        //{
+        //    get
+        //    {
+        //        return Module.Status;
 
-                //if (labStatus.Image.Equals(imgStatus.Images["Disable"]))
-                //{
-                //    return ModuleStatus.Disable;
-                //}
-                //else if (labStatus.Image.Equals(imgStatus.Images["OK"]))
-                //{
-                //    return ModuleStatus.OK;
-                //}
-                //else if (labStatus.Image.Equals(imgStatus.Images["NG"]))
-                //{
-                //    return ModuleStatus.NG;
-                //}
-                //else
-                //{
-                //    return ModuleStatus.Null;
-                //}
-            }
-            set
-            {
-                Module.Status = value;
+        //        //if (labStatus.Image.Equals(imgStatus.Images["Disable"]))
+        //        //{
+        //        //    return ModuleStatus.Disable;
+        //        //}
+        //        //else if (labStatus.Image.Equals(imgStatus.Images["OK"]))
+        //        //{
+        //        //    return ModuleStatus.OK;
+        //        //}
+        //        //else if (labStatus.Image.Equals(imgStatus.Images["NG"]))
+        //        //{
+        //        //    return ModuleStatus.NG;
+        //        //}
+        //        //else
+        //        //{
+        //        //    return ModuleStatus.Null;
+        //        //}
+        //    }
+        //    set
+        //    {
+        //        Module.Status = value;
 
-                switch (value)
-                {
-                    case ModuleStatus.Null:
-                        this.BackColor = SystemColors.Control;
-                        labStatus.Image = null;
-                        break;
-                    case ModuleStatus.Disable:
-                        this.BackColor = SystemColors.ControlDark;
-                        labStatus.Image = imgStatus.Images["Disable"];
-                        break;
-                    case ModuleStatus.OK:
-                        labStatus.Image = imgStatus.Images["OK"];
-                        break;
-                    case ModuleStatus.NG:
-                        labStatus.Image = imgStatus.Images["NG"];
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
+        //        switch (value)
+        //        {
+        //            case ModuleStatus.Null:
+        //                this.BackColor = SystemColors.Control;
+        //                labStatus.Image = null;
+        //                break;
+        //            case ModuleStatus.Disable:
+        //                this.BackColor = SystemColors.ControlDark;
+        //                labStatus.Image = imgStatus.Images["Disable"];
+        //                break;
+        //            case ModuleStatus.OK:
+        //                labStatus.Image = imgStatus.Images["OK"];
+        //                break;
+        //            case ModuleStatus.NG:
+        //                labStatus.Image = imgStatus.Images["NG"];
+        //                break;
+        //            default:
+        //                break;
+        //        }
+        //    }
+        //}
 
         
 
@@ -107,7 +108,7 @@ namespace Test
             InitializeComponent();
             Text = Module.Name;
             Index = module.Index;
-            Status = module.Status;
+            //Status = module.Status;
             //Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         }
         

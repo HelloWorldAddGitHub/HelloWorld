@@ -40,7 +40,7 @@
             // labText
             // 
             this.labText.AllowDrop = true;
-            this.labText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.labText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.labText.AutoSize = true;
             this.labText.Location = new System.Drawing.Point(64, 12);

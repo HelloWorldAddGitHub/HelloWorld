@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using Module;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Test
@@ -170,7 +171,7 @@ namespace Test
                                 module.HWindow = mainForm.imageWindow.Window;
 
                                 module.Index = Convert.ToInt32(unit.GetAttribute("id"));
-                                module.Status = (ModuleStatus)Enum.Parse(typeof(ModuleStatus), unit.GetAttribute("status"));
+                                //module.Status = (ModuleStatus)Enum.Parse(typeof(ModuleStatus), unit.GetAttribute("status"));
 
                                 module.Load();
 
@@ -233,7 +234,7 @@ namespace Test
                     
                     unit.SetAttribute("id", module.Index.ToString());
                     unit.SetAttribute("name", module.Name);
-                    unit.SetAttribute("status", module.Status.ToString());
+                    //unit.SetAttribute("status", module.Status.ToString());
 
                     module.Save();
 
