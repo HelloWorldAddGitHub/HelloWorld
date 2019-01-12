@@ -1,4 +1,8 @@
-﻿using Halcon.Window;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using Halcon.Window;
 using HalconDotNet;
 
 namespace Module
@@ -7,43 +11,42 @@ namespace Module
     public class ReadImageModule : ModuleBase
     {
         public HObject Image = new HObject();
-        public HTuple fileName { get; set; } = new HTuple();
+
+        public HTuple FileName { get; set; } = new HTuple();
+
+
         private int index;
-        
+
 
         public override string Name { get; set; } = "读入图像";
-
-        //public override Form SetupForm { get; set; }
 
         public ReadImageModule()
         {
 
         }
 
-        public ReadImageModule(Process process, HalconWindow window) : base(process, window)
+        public ReadImageModule(Process process) : base(process)
         {
 
         }
 
-        public override bool Run()
+        public override bool Execute()
         {
-            ////Image.Dispose();
-            //HOperatorSet.ReadImage(out Image, fileName);
-            ////ImageWindow?.DispObj(Image);
-            //HOperatorSet.DispObj(Image, ImageWindow.HalconWindow);
-
-            //ImageWindow.ReadImage(fileName);
-            //ImageWindow.DispObj(Image);
-            //ImageWindow.Select();
-            //ImageWindow.OpenImageDialog();
-
-            if (index >= fileName.TupleLength())
+            if (index >= FileName.TupleLength())
             {
                 index = 0;
             }
 
             Image?.Dispose();
-            HWindow.ReadImage(fileName[index++]);
+            HOperatorSet.ReadImage(out Image, FileName[index++]);
+
+            if (HDevWindowStack.IsOpen())
+            {
+                HTuple width, height;
+                HOperatorSet.GetImageSize(Image, out width, out height);
+                HOperatorSet.SetPart(HDevWindowStack.GetActive(), 0, 0, height - 1, width - 1);
+                HOperatorSet.DispImage(Image, HDevWindowStack.GetActive());
+            }
 
             return true;
         }

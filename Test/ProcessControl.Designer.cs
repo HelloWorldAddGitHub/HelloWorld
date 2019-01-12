@@ -1,4 +1,4 @@
-﻿namespace Test
+﻿namespace Demo
 {
     partial class ProcessControl
     {

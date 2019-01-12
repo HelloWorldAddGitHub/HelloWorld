@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.Collections;
 using Module;
 
-namespace Test
+namespace Demo
 {
     public partial class ModuleControl : UserControl
     {
@@ -102,7 +102,7 @@ namespace Test
         
 
 
-        public ModuleControl(ModuleBase module)
+        public ModuleControl(Module.ModuleBase module)
         {
             Module = module;
             InitializeComponent();

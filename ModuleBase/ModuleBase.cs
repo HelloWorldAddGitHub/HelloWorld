@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Halcon.Window;
 using HalconDotNet;
 
 namespace Module
@@ -11,30 +10,20 @@ namespace Module
     /// 模块基类，在派生类中需要增加特性
     /// [Module("名称", "类别")]
     /// </summary>
-    public abstract class ModuleBase
+    public abstract class ModuleBase : IDisposable
     {
         public int Index { get; set; }
 
         public abstract string Name { get; set; }
-        
-
-        //public ModuleStatus Status { get; set; }
-
-        public bool IsSaveHObject;
-
-        public Process Process;
 
 
-        public HalconWindow HWindow;
+        public Process Owner;
 
-
-        //public Dictionary<string, HObject> InHObjectParams = new Dictionary<string, HObject>();
-        //public Dictionary<string, HTuple> InHTupleParams = new Dictionary<string, HTuple>();
 
         public Dictionary<string, HObject> OutHObjectParams = new Dictionary<string, HObject>();
         public Dictionary<string, HTuple> OutHTupleParams = new Dictionary<string, HTuple>();
 
-        
+
 
 
         public ModuleBase()
@@ -43,11 +32,9 @@ namespace Module
         }
 
 
-        public ModuleBase(Process process, HalconWindow window)
+        public ModuleBase(Process process)
         {
-            Process = process;
-            HWindow = window;
-
+            Owner = process;
             InitParam();
         }
 
@@ -71,88 +58,87 @@ namespace Module
 
         public virtual void Save()
         {
-            FieldInfo[] fields = GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            //FieldInfo[] fields = GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            PropertyInfo[] properties = GetType().GetProperties();
 
-            foreach (var item in fields)
+
+            foreach (var property in properties/*fields*/)
             {
-                if (item.FieldType == typeof(HObject))
-                {
-                    if (IsSaveHObject)
-                    {
-                        HObject obj = (HObject)item.GetValue(this);
-                        if (obj != null && obj.IsInitialized())
-                        {
-                            string path = $"projects\\{Process.Project.Name}\\{Process.Name}\\[{Index}]{Name}";
-                            if (!Directory.Exists(path))
-                            {
-                                Directory.CreateDirectory(path);
-                            }
+                //if (property.PropertyType == typeof(HObject))
+                //{
+                //    if (IsSaveHObject)
+                //    {
+                //        HObject obj = (HObject)property.GetValue(this);
+                //        if (obj != null && obj.IsInitialized())
+                //        {
+                //            string path = $"projects\\{Owner.Owner.Name}\\{Owner.Name}\\[{Index}]{Name}";
+                //            if (!Directory.Exists(path))
+                //            {
+                //                Directory.CreateDirectory(path);
+                //            }
 
-                            path = $"{path}\\{item.Name}.obj".Replace("\\", "/");
-                            HOperatorSet.WriteObject(obj, path);
-                        }
-                    }
-                }
-                else if (item.FieldType == typeof(HTuple))
+                //            path = $"{path}\\{property.Name}.obj".Replace("\\", "/");
+                //            HOperatorSet.WriteObject(obj, path);
+                //        }
+                //    }
+                //}
+                /*else */
+                if (property.PropertyType == typeof(HTuple))
                 {
-                    HTuple tuple = (HTuple)item.GetValue(this);
+                    HTuple tuple = (HTuple)property.GetValue(this);
                     if (tuple != null && tuple.Length > 0)
                     {
-                        string path = $"projects\\{Process.Project.Name}\\{Process.Name}\\[{Index}]{Name}";
+                        string path = $"projects\\{Owner.Owner.Name}\\{Owner.Name}\\[{Index}]{Name}";
                         if (!Directory.Exists(path))
                         {
                             Directory.CreateDirectory(path);
                         }
 
-                        path = $"{path}\\{item.Name}.tup".Replace("\\", "/");
+
+                        path = $"{path}\\{property.Name}.HTuple".Replace("\\", "/");
                         HOperatorSet.WriteTuple(tuple, path);
                     }
                 }
-                //else if (item.Name != nameof(OutHObjectParams) && item.Name != nameof(OutHTupleParams))
-                //{
-                //    XmlElement field = doc.CreateElement("field");
-                //    field.SetAttribute("name", item.Name);
-                //    field.SetAttribute("value", item.GetValue(this).ToString());
-                //    parentNode.AppendChild(field);
-                //}
             }
         }
 
 
         public virtual void Load()
         {
-            FieldInfo[] fields = GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            //FieldInfo[] fields = GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            PropertyInfo[] properties = GetType().GetProperties();
 
-            foreach (var item in fields)
+            foreach (var property in properties/*fields*/)
             {
-                if (item.FieldType == typeof(HObject))
+                //if (property.PropertyType == typeof(HObject))
+                //{
+                //    if (IsSaveHObject)
+                //    {
+                //        string fileName = $"projects\\{Owner.Owner.Name}\\{Owner.Name}\\[{Index}]{Name}\\{property.Name}.obj";
+                //        if (File.Exists(fileName))
+                //        {
+                //            HObject obj = new HObject();
+                //            HOperatorSet.ReadObject(out obj, fileName);
+                //            property.SetValue(this, obj);
+                //        }
+                //    }
+                //}
+                /*else */
+                if (property.PropertyType == typeof(HTuple))
                 {
-                    if (IsSaveHObject)
-                    {
-                        string fileName = $"projects\\{Process.Project.Name}\\{Process.Name}\\[{Index}]{Name}\\{item.Name}.obj";
-                        if (File.Exists(fileName))
-                        {
-                            HObject obj = new HObject();
-                            HOperatorSet.ReadObject(out obj, fileName);
-                            item.SetValue(this, obj);
-                        }
-                    }
-                }
-                else if (item.FieldType == typeof(HTuple))
-                {
-                    string fileName = $"projects\\{Process.Project.Name}\\{Process.Name}\\[{Index}]{Name}\\{item.Name}.tup";
+                    string fileName = $"projects\\{Owner.Owner.Name}\\{Owner.Name}\\[{Index}]{Name}\\{property.Name}.HTuple";
                     if (File.Exists(fileName))
                     {
                         HTuple tuple = new HTuple();
                         HOperatorSet.ReadTuple(fileName, out tuple);
-                        item.SetValue(this, tuple);
+                        property.SetValue(this, tuple);
                     }
                 }
             }
         }
 
 
-        public abstract bool Run();
+        public abstract bool Execute();
 
         public abstract void ShowDialog();
 
@@ -170,11 +156,11 @@ namespace Module
             int index = Convert.ToInt32(array[1].Split('[', ']')[1]) - 1;
             string name = array[2];
 
-            foreach (var item in Process.Project)
+            foreach (var item in this.Owner.Owner.Items)
             {
-                if (item.Name == process)
+                if (item.Key == process)
                 {
-                    return item[index].OutHObjectParams[name];
+                    return item.Value[index].OutHObjectParams[name];
                 }
             }
 
@@ -195,19 +181,37 @@ namespace Module
             int index = Convert.ToInt32(array[1].Split('[', ']')[1]) - 1;
             string name = array[2];
 
-            foreach (var item in Process.Project)
+            foreach (var item in Owner.Owner.Items)
             {
-                if (item.Name == process)
+                if (item.Key == process)
                 {
-                    return item[index].OutHTupleParams[name];
+                    return item.Value[index].OutHTupleParams[name];
                 }
             }
 
             return null;
         }
 
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 清理所有正在使用的资源。
+        /// </summary>
+        /// <param name="disposing">如果应释放托管资源，为 true；否则为 false。</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                foreach (var hObject in OutHObjectParams.Values)
+                {
+                    hObject.Dispose();
+                }
+            }
+        }
     }
-
-
-    //public enum ModuleStatus { Null, Disable, OK, NG }
 }

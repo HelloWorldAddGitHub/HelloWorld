@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Module;
 
-namespace Test
+namespace Demo
 {
     public partial class ProcessControl : TabPage
     {
-        private MainForm mainForm;
-        public Process Processes { get; set; }
+        //private MainForm mainForm;
+        public Process VisualProcess { get; set; }
 
-        public ProcessControl(string name, MainForm form)
+        public ProcessControl(string name, Project project)
         {
             Name = Text = name;
-            mainForm = form;
-            Processes = new Process(name, mainForm.Projects);
+            //mainForm = form;
+            VisualProcess = new Process(name, project);
             
             InitializeComponent();
         }
@@ -115,8 +115,8 @@ namespace Test
 
                 sourceControl.Parent = this;
 
-                sourceControl.Module.Process = Processes;
-                Processes.Add(sourceControl.Module);
+                sourceControl.Module.Owner = VisualProcess;
+                VisualProcess.Items.Add(sourceControl.Module);
             }
             else
             {
@@ -133,8 +133,8 @@ namespace Test
 
                 sourceControl.Parent = this;
 
-                sourceControl.Module.Process = Processes;
-                Processes.Insert(sourceControl.Index, sourceControl.Module);
+                sourceControl.Module.Owner = VisualProcess;
+                VisualProcess.Items.Insert(sourceControl.Index, sourceControl.Module);
 
                 SortModule();
             }
@@ -198,7 +198,7 @@ namespace Test
 
         private void SortModule()
         {
-            Processes.Sort((m1, m2) =>
+            VisualProcess.Items.Sort((m1, m2) =>
             {
                 if (m1.Index > m2.Index)
                 {
@@ -226,7 +226,7 @@ namespace Test
                 }
             }
 
-            Processes.Remove(sourceControl.Module);
+            VisualProcess.Items.Remove(sourceControl.Module);
 
             sourceControl.Dispose();
 
@@ -268,7 +268,7 @@ namespace Test
 
         private void ProcessControl_TextChanged(object sender, EventArgs e)
         {
-            Processes.Name = Text;
+            VisualProcess.Name = Text;
         }
 
         private void ProcessControl_ControlAdded(object sender, ControlEventArgs e)

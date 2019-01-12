@@ -1,36 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Module
 {
-    public class Project : List<Process>
+    public class Project
     {
+        public Dictionary<string, Process> Items { get; set; } = new Dictionary<string, Process>();
+
         public string Name { get; set; }
 
         public Process this[string name]
         {
             get
             {
-                Predicate<Process> pre = (p) =>
-                {
-                    return p.Name == name ? true : false;
-                };
+                //Predicate<Process> pre = (p) =>
+                //{
+                //    return p.Name == name ? true : false;
+                //};
 
-                return Exists(pre) ? Find(pre) : null;
+                //return Exists(pre) ? Find(pre) : null;
+                Process value;
+                Items.TryGetValue(name, out value);
+                return value;
             }
-            set
-            {
-                Predicate<Process> pre = (p) =>
-                {
-                    return p.Name == name ? true : false;
-                };
+            //set
+            //{
+            //    Predicate<Process> pre = (p) =>
+            //    {
+            //        return p.Name == name ? true : false;
+            //    };
 
-                RemoveAll(pre);
-                Add(value);
-            }
+            //    RemoveAll(pre);
+            //    Add(value);
+            //}
         }
 
         public Process MainProcess { get; set; }
@@ -38,12 +39,6 @@ namespace Module
         public Project(string name)
         {
             Name = name;
-        }
-
-
-        public static implicit operator string(Project project)
-        {
-            return project.Name;
         }
     }
 }

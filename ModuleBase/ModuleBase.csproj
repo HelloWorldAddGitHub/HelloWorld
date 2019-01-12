@@ -7,7 +7,7 @@
     <ProjectGuid>{56897B23-E228-43C2-81F0-68A9EAD8C7C3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ModuleBase</RootNamespace>
+    <RootNamespace>Module</RootNamespace>
     <AssemblyName>ModuleBase</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -50,9 +50,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HalconTool\HalconTool.csproj">
+    <ProjectReference Include="..\HalconTool\HalconControl.csproj">
       <Project>{D1EE9AE5-04A9-49B2-B455-F4D2F0E724CA}</Project>
-      <Name>HalconTool</Name>
+      <Name>HalconControl</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

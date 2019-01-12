@@ -30,12 +30,13 @@ namespace Module
                 textBox1.Text = ofd.FileNames[0];
                 //ri.fileName = ofd.FileName.Replace("\\", "/");
 
-                ri.fileName = new HalconDotNet.HTuple();
+                ri.FileName = new HalconDotNet.HTuple();
                 foreach (var item in ofd.FileNames)
                 {
-                    ri.fileName.Append(item.Replace("\\", "/"));
+                    ri.FileName.Append(item.Replace("\\", "/"));
                 }
 
+                //ri.Execute();
             }
         }
     }

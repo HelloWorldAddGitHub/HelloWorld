@@ -1,43 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Module
 {
-    public class Process : List<ModuleBase>
+    public class Process
     {
+        public List<ModuleBase> Items { get; set; } = new List<ModuleBase>();
+
         public string Name { get; set; }
-        
+
 
         private CancellationTokenSource runCancelToken;
 
-        public Project Project { get; set; }
+        public Project Owner { get; set; }
 
         public Process(string name, Project project)
         {
             Name = name;
-            Project = project;
+            Owner = project;
+        }
+
+
+        public ModuleBase this[int index]
+        {
+            get
+            {
+                return Items[index];
+            }
         }
 
 
         public void RunOne()
         {
             runCancelToken?.Cancel();
+            runCancelToken?.Dispose();
             runCancelToken = new CancellationTokenSource();
 
             Task.Run(() =>
             {
-                foreach (var item in this)
+                foreach (var unit in Items)
                 {
+                    unit.Execute();
+
                     if (runCancelToken.IsCancellationRequested)
                     {
                         return;
                     }
-
-                    item.Run();
                 }
             });
         }
@@ -46,22 +55,21 @@ namespace Module
         public void Start()
         {
             runCancelToken?.Cancel();
+            runCancelToken?.Dispose();
             runCancelToken = new CancellationTokenSource();
 
             Task.Run(() =>
             {
                 while (true)
                 {
-                    foreach (var item in this)
+                    foreach (var unit in Items)
                     {
+                        unit.Execute();
+
                         if (runCancelToken.IsCancellationRequested)
                         {
                             return;
                         }
-
-                        item.Run();
-
-                        Thread.Sleep(200);
                     }
                 }
             });
@@ -70,12 +78,6 @@ namespace Module
         public void Stop()
         {
             runCancelToken?.Cancel();
-        }
-
-
-        public static implicit operator string(Process process)
-        {
-            return process.Name;
         }
     }
 }
