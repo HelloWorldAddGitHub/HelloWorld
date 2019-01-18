@@ -4,9 +4,14 @@ namespace Module
 {
     public class Project
     {
-        public Dictionary<string, Process> Items { get; set; } = new Dictionary<string, Process>();
+        private static Project instance;
+        private static readonly object locker = new object();
 
         public string Name { get; set; }
+
+        public Process MainProcess { get; set; }
+
+        public Dictionary<string, Process> Items { get; set; } = new Dictionary<string, Process>();
 
         public Process this[string name]
         {
@@ -34,11 +39,37 @@ namespace Module
             //}
         }
 
-        public Process MainProcess { get; set; }
-
-        public Project(string name)
+        private Project()
         {
-            Name = name;
+
+        }
+
+        /// <summary>
+        /// 获取Project单个实例
+        /// </summary>
+        /// <returns></returns>
+        public static Project GetInstance()
+        {
+            // 双重锁定
+            if (instance == null)
+            {
+                lock (locker)
+                {
+                    if (instance == null)
+                    {
+                        instance = new Project();
+                    }
+                }
+            }
+
+            return instance;
+        }
+
+        public void Clear()
+        {
+            Items.Clear();
+            MainProcess = null;
+            Name = string.Empty;
         }
     }
 }

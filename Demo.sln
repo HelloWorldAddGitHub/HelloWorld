@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EthernetPort", "EthernetPor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Login", "Login\Login.csproj", "{63F1F114-ADC2-44F2-9488-D4C14CAEBF02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "Test\Demo.csproj", "{87C7C2CF-3AD0-48BC-BB22-BFF36321164E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "Demo\Demo.csproj", "{87C7C2CF-3AD0-48BC-BB22-BFF36321164E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{56897B23-E228-43C2-81F0-68A9EAD8C7C3} = {56897B23-E228-43C2-81F0-68A9EAD8C7C3}
 	EndProjectSection

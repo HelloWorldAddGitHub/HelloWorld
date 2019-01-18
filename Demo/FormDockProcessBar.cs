@@ -17,103 +17,122 @@ namespace Demo
 {
     public partial class FormDockProcessBar : DockContent
     {
-        private Project project;
-
-        public FormDockProcessBar(Project project, string fileName = null)
+        public FormDockProcessBar(string fileName = null)
         {
-            this.project = project;
             InitializeComponent();
 
             if (fileName != null)
             {
-                OpenFile(fileName);
+                Open(fileName);
             }
         }
 
         private void tsbAdd_Click(object sender, EventArgs e)
         {
-            string text = "流程1";
+            // 判断项目是否存在
+            if (string.IsNullOrWhiteSpace(Project.GetInstance().Name))
+            {
+                MessageBox.Show("请先新建项目");
+                return;
+            }
+
+            // 初始化流程名称
+            string name = "流程1";
 
             for (int i = 1; ; i++)
             {
-                if (!tabControl1.TabPages.ContainsKey("流程" + i))
+                if (!TabProcesses.TabPages.ContainsKey("流程" + i))
                 {
-                    text = "流程" + i;
+                    name = "流程" + i;
                     break;
                 }
             }
 
-            ProcessControl tp = new ProcessControl(text, project);
-            project.MainProcess = tp.VisualProcess;
+            // 新建流程页
+            ProcessTabPage tp = new ProcessTabPage(name);
 
+            if (Project.GetInstance().MainProcess == null)
+            {   // 设置主流程
+                Project.GetInstance().MainProcess = Project.GetInstance()[name];
+            }
 
-            tabControl1.TabPages.Add(tp);
-            tabControl1.SelectedTab = tp;
+            // 将流程页添加到TabControl
+            TabProcesses.TabPages.Add(tp);
+            TabProcesses.SelectedTab = tp;
         }
 
         private void tsbDel_Click(object sender, EventArgs e)
         {
-            if (tabControl1.TabPages.Count == 0)
+            if (TabProcesses.TabPages.Count <= 1)
             {
                 return;
             }
 
-            Process process = project[((ProcessControl)tabControl1.SelectedTab).Name];
-            project.Items.Remove(process.Name);
+            // 获得流程名称
+            string name = ((ProcessTabPage)TabProcesses.SelectedTab).Text;
 
+            if (Project.GetInstance().MainProcess.Name == name)
+            {
+                MessageBox.Show("不能移除主流程");
+                return;
+            }
 
-            int index = tabControl1.TabPages.IndexOf(tabControl1.SelectedTab);
-            tabControl1.TabPages.Remove(tabControl1.SelectedTab);
+            // 移除流程
+            Project.GetInstance().Items.Remove(name);
 
-            if (index == 0 || tabControl1.TabPages.Count == 0)
+            // 移除流程标签页
+            int index = TabProcesses.TabPages.IndexOf(TabProcesses.SelectedTab);
+            TabProcesses.TabPages.Remove(TabProcesses.SelectedTab);
+
+            if (index == 0 || TabProcesses.TabPages.Count == 0)
             {
                 return;
             }
 
-            tabControl1.SelectedIndex = index - 1;
-
+            TabProcesses.SelectedIndex = index - 1;
         }
 
         private void tsbEdit_Click(object sender, EventArgs e)
         {
-            if (tabControl1.TabPages.Count == 0)
+            if (TabProcesses.TabPages.Count == 0)
             {
                 return;
             }
 
-            FormSetProcessBar ttef = new FormSetProcessBar(tabControl1);
-            ttef.ShowDialog();
+            FormProcessBarSet f = new FormProcessBarSet(this);
+            f.ShowDialog();
         }
 
 
         private void tabControl1_ControlAdded(object sender, ControlEventArgs e)
         {
-            Process process = ((ProcessControl)e.Control).VisualProcess;
-            project.Items.Add(process.Name, process);
+            //string name = ((ProcessTabPage)e.Control).Text;
+            //Project.GetInstance().Items.Add(name, new Process(name));
         }
 
         private void tabControl1_ControlRemoved(object sender, ControlEventArgs e)
         {
-            Process process = ((ProcessControl)e.Control).VisualProcess;
-            project.Items.Remove(process.Name);
+            //string name = ((ProcessTabPage)e.Control).Text;
+            //Project.GetInstance().Items.Remove(name);
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ProcessControl pc = (ProcessControl)tabControl1.SelectedTab;
-            if (pc != null)
-            {
-                project.MainProcess = ((ProcessControl)tabControl1.SelectedTab).VisualProcess;
-            }
-            else
-            {
-                project.MainProcess = null;
-            }
+            //ProcessTabPage pc = (ProcessTabPage)TabProcesses.SelectedTab;
+            //if (pc != null)
+            //{
+            //    Project.GetInstance().MainProcess = Project.GetInstance().Items[((ProcessTabPage)TabProcesses.SelectedTab).Text];
+            //}
+            //else
+            //{
+            //    Project.GetInstance().MainProcess = null;
+            //}
         }
 
         private void tsbNew_Click(object sender, EventArgs e)
         {
-
+            FormProcessBarNew fpbn = new FormProcessBarNew(this);
+            fpbn.ShowDialog();
         }
 
         private void tsbOpen_Click(object sender, EventArgs e)
@@ -127,10 +146,10 @@ namespace Demo
                 return;
             }
 
-            OpenFile(ofd.FileName);
+            Open(ofd.FileName);
         }
 
-        private void OpenFile(string fileName)
+        private void Open(string fileName)
         {
             // 加载当前应用程序目录下的指定程序集
             DirectoryInfo info = new DirectoryInfo(Application.StartupPath);
@@ -154,26 +173,23 @@ namespace Demo
                 }
             }
 
-
-            // 清理所有流程
-            tabControl1.TabPages.Clear();
-
             // 从XML加载流程
             XmlDocument doc = new XmlDocument();
             doc.Load(fileName);
 
             XmlElement root = doc.DocumentElement;
 
-            // 获取项目
-            project.Items.Clear();
-            project.Name = root.GetAttribute("name");
+            // 清理所有流程
+            TabProcesses.TabPages.Clear();
+            Project.GetInstance().Clear();
+            Project.GetInstance().Name = root.GetAttribute("name");
 
             // 流程节点循环加载
             foreach (XmlElement page in root.ChildNodes)
             {
                 // 增加流程
-                ProcessControl tp = new ProcessControl(page.GetAttribute("name"), project);
-                tabControl1.TabPages.Add(tp);
+                ProcessTabPage tp = new ProcessTabPage(page.GetAttribute("name")/*, VisualProject*/);
+                TabProcesses.TabPages.Add(tp);
 
                 // 模块节点循环加载
                 foreach (XmlElement unit in page.ChildNodes)
@@ -187,7 +203,7 @@ namespace Demo
                         {
                             // 增加模块
                             ModuleBase module = (ModuleBase)type.Value.CreateInstance(type.Key.FullName);
-                            module.Owner = tp.VisualProcess;
+                            module.Owner = Project.GetInstance()[tp.Text];
                             module.Index = Convert.ToInt32(unit.GetAttribute("id"));
                             module.Load();
 
@@ -200,48 +216,56 @@ namespace Demo
             }
 
             // 设置主流程
-            project.MainProcess = project[root.GetAttribute("main")];
-
-            tabControl1.SelectTab(project.MainProcess.Name);
-            //project.Text += "——" + project.Name;
+            Project.GetInstance().MainProcess = Project.GetInstance()[root.GetAttribute("main")];
+            TabProcesses.SelectTab(Project.GetInstance().MainProcess.Name);
         }
 
         private void tsbSave_Click(object sender, EventArgs e)
         {
-            //if (filename == null)
-            //{
-            //    SaveFileDialog sfd = new SaveFileDialog();
+            if (!string.IsNullOrWhiteSpace(Project.GetInstance().Name))
+            {
+                Save();
+            }
+            else
+            {
+                MessageBox.Show("没有项目");
+            }
+        }
 
-            //    if (sfd.ShowDialog() == DialogResult.OK)
-            //    {
-            //        filename = sfd.FileName;
-            //    }
-            //}
-
-
+        /// <summary>
+        /// 保存项目
+        /// </summary>
+        /// <param name="isSaveModule">指示是否保存模块数据</param>
+        public void Save(bool isSaveModule = true)
+        {
+            // 创建项目的XML文档
             XmlDocument doc = new XmlDocument();
             XmlElement root = doc.CreateElement("Project");
-            root.SetAttribute("name", project.Name);
-            root.SetAttribute("main", project.MainProcess.Name);
+            root.SetAttribute("name", Project.GetInstance().Name);
+            root.SetAttribute("main", Project.GetInstance().MainProcess.Name);
 
             XmlDeclaration dec = doc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
             doc.AppendChild(dec);
             doc.AppendChild(root);
 
-            foreach (var process in project.Items.Values)
+            // 添加流程节点
+            foreach (var process in Project.GetInstance().Items.Values)
             {
                 XmlElement page = doc.CreateElement("Process");
                 page.SetAttribute("name", process.Name);
 
+                // 添加模块节点
                 foreach (var module in process.Items)
                 {
                     XmlElement unit = doc.CreateElement("Module");
 
                     unit.SetAttribute("id", module.Index.ToString());
                     unit.SetAttribute("name", module.Name);
-                    //unit.SetAttribute("status", module.Status.ToString());
 
-                    module.Save();
+                    if (isSaveModule)
+                    {   // 保存模块数据
+                        module.Save();
+                    }
 
                     page.AppendChild(unit);
                 }
@@ -249,8 +273,8 @@ namespace Demo
                 root.AppendChild(page);
             }
 
-
-            doc.Save($"projects\\{project.Name}.vs");
+            // 永久保存
+            doc.Save($@".\projects\{Project.GetInstance().Name}.vs");
         }
     }
 }

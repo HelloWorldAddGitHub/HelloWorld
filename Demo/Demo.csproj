@@ -92,6 +92,12 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormProcessBarNew.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormProcessBarNew.Designer.cs">
+      <DependentUpon>FormProcessBarNew.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModuleControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -106,17 +112,17 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProcessControl.cs">
+    <Compile Include="ProcessTabPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ProcessControl.Designer.cs">
-      <DependentUpon>ProcessControl.cs</DependentUpon>
+    <Compile Include="ProcessTabPage.Designer.cs">
+      <DependentUpon>ProcessTabPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormSetProcessBar.cs">
+    <Compile Include="FormProcessBarSet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormSetProcessBar.Designer.cs">
-      <DependentUpon>FormSetProcessBar.cs</DependentUpon>
+    <Compile Include="FormProcessBarSet.Designer.cs">
+      <DependentUpon>FormProcessBarSet.cs</DependentUpon>
     </Compile>
     <Compile Include="FormDockToolBox.cs">
       <SubType>Form</SubType>
@@ -129,6 +135,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormProcessBarNew.resx">
+      <DependentUpon>FormProcessBarNew.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ModuleControl.resx">
       <DependentUpon>ModuleControl.cs</DependentUpon>
@@ -146,11 +155,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="ProcessControl.resx">
-      <DependentUpon>ProcessControl.cs</DependentUpon>
+    <EmbeddedResource Include="ProcessTabPage.resx">
+      <DependentUpon>ProcessTabPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormSetProcessBar.resx">
-      <DependentUpon>FormSetProcessBar.cs</DependentUpon>
+    <EmbeddedResource Include="FormProcessBarSet.resx">
+      <DependentUpon>FormProcessBarSet.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormDockToolBox.resx">
       <DependentUpon>FormDockToolBox.cs</DependentUpon>

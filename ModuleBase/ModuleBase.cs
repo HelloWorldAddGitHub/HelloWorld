@@ -88,7 +88,7 @@ namespace Module
                     HTuple tuple = (HTuple)property.GetValue(this);
                     if (tuple != null && tuple.Length > 0)
                     {
-                        string path = $"projects\\{Owner.Owner.Name}\\{Owner.Name}\\[{Index}]{Name}";
+                        string path = $"projects\\{Project.GetInstance().Name}\\{Owner.Name}\\[{Index}]{Name}";
                         if (!Directory.Exists(path))
                         {
                             Directory.CreateDirectory(path);
@@ -126,7 +126,7 @@ namespace Module
                 /*else */
                 if (property.PropertyType == typeof(HTuple))
                 {
-                    string fileName = $"projects\\{Owner.Owner.Name}\\{Owner.Name}\\[{Index}]{Name}\\{property.Name}.HTuple";
+                    string fileName = $@".\projects\{Project.GetInstance().Name}\{Owner.Name}\[{Index}]{Name}\{property.Name}.HTuple";
                     if (File.Exists(fileName))
                     {
                         HTuple tuple = new HTuple();
@@ -156,7 +156,7 @@ namespace Module
             int index = Convert.ToInt32(array[1].Split('[', ']')[1]) - 1;
             string name = array[2];
 
-            foreach (var item in this.Owner.Owner.Items)
+            foreach (var item in Project.GetInstance().Items)
             {
                 if (item.Key == process)
                 {
@@ -181,7 +181,7 @@ namespace Module
             int index = Convert.ToInt32(array[1].Split('[', ']')[1]) - 1;
             string name = array[2];
 
-            foreach (var item in Owner.Owner.Items)
+            foreach (var item in Project.GetInstance().Items)
             {
                 if (item.Key == process)
                 {

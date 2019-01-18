@@ -13,12 +13,12 @@ namespace Module
 
         private CancellationTokenSource runCancelToken;
 
-        public Project Owner { get; set; }
+        //public Project Owner { get; set; }
 
-        public Process(string name, Project project)
+        public Process(string name/*, Project project*/)
         {
             Name = name;
-            Owner = project;
+            //Owner = project;
         }
 
 
@@ -31,7 +31,7 @@ namespace Module
         }
 
 
-        public void RunOne()
+        public void ExecuteOne()
         {
             runCancelToken?.Cancel();
             runCancelToken?.Dispose();
@@ -52,7 +52,7 @@ namespace Module
         }
 
 
-        public void Start()
+        public void ExecuteStart()
         {
             runCancelToken?.Cancel();
             runCancelToken?.Dispose();
@@ -75,7 +75,7 @@ namespace Module
             });
         }
 
-        public void Stop()
+        public void ExecuteStop()
         {
             runCancelToken?.Cancel();
         }

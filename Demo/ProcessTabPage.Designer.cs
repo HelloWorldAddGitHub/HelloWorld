@@ -1,6 +1,6 @@
 ﻿namespace Demo
 {
-    partial class ProcessControl
+    partial class ProcessTabPage
     {
         /// <summary> 
         /// 必需的设计器变量。

@@ -130,11 +130,11 @@ namespace Demo
 
                 if (sourceControl.Parent == null)
                 {
-                    ((ProcessControl)this.Parent).AddModule(sourceControl, this);
+                    ((ProcessTabPage)this.Parent).AddModule(sourceControl, this);
                 }
                 else
                 {
-                    ((ProcessControl)this.Parent).MoveModule(sourceControl, this);
+                    ((ProcessTabPage)this.Parent).MoveModule(sourceControl, this);
                 }
 
                 #region
@@ -207,7 +207,7 @@ namespace Demo
         private void ModuleBase_ParentChanged(object sender, EventArgs e)
         {
             int width = Parent.Width;
-            if (((ProcessControl)Parent).VerticalScroll.Visible)
+            if (((ProcessTabPage)Parent).VerticalScroll.Visible)
             {
                 width -= 20;
             }

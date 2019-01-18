@@ -38,7 +38,7 @@
             this.tsbAdd = new System.Windows.Forms.ToolStripButton();
             this.tsbDel = new System.Windows.Forms.ToolStripButton();
             this.tsbSet = new System.Windows.Forms.ToolStripButton();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.TabProcesses = new System.Windows.Forms.TabControl();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -68,7 +68,7 @@
             this.tsbNew.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbNew.Name = "tsbNew";
             this.tsbNew.Size = new System.Drawing.Size(28, 28);
-            this.tsbNew.Text = "新建";
+            this.tsbNew.Text = "新建项目";
             this.tsbNew.Click += new System.EventHandler(this.tsbNew_Click);
             // 
             // tsbOpen
@@ -78,7 +78,7 @@
             this.tsbOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbOpen.Name = "tsbOpen";
             this.tsbOpen.Size = new System.Drawing.Size(28, 28);
-            this.tsbOpen.Text = "打开";
+            this.tsbOpen.Text = "打开项目";
             this.tsbOpen.Click += new System.EventHandler(this.tsbOpen_Click);
             // 
             // tsbSave
@@ -88,7 +88,7 @@
             this.tsbSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbSave.Name = "tsbSave";
             this.tsbSave.Size = new System.Drawing.Size(28, 28);
-            this.tsbSave.Text = "保存";
+            this.tsbSave.Text = "保存项目";
             this.tsbSave.Click += new System.EventHandler(this.tsbSave_Click);
             // 
             // toolStripSeparator
@@ -126,19 +126,19 @@
             this.tsbSet.Text = "编辑流程";
             this.tsbSet.Click += new System.EventHandler(this.tsbEdit_Click);
             // 
-            // tabControl1
+            // TabProcesses
             // 
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 31);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.Padding = new System.Drawing.Point(12, 6);
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(184, 531);
-            this.tabControl1.TabIndex = 1;
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
-            this.tabControl1.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.tabControl1_ControlAdded);
-            this.tabControl1.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.tabControl1_ControlRemoved);
+            this.TabProcesses.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TabProcesses.Location = new System.Drawing.Point(0, 31);
+            this.TabProcesses.Margin = new System.Windows.Forms.Padding(2);
+            this.TabProcesses.Name = "TabProcesses";
+            this.TabProcesses.Padding = new System.Drawing.Point(12, 6);
+            this.TabProcesses.SelectedIndex = 0;
+            this.TabProcesses.Size = new System.Drawing.Size(184, 531);
+            this.TabProcesses.TabIndex = 1;
+            this.TabProcesses.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
+            this.TabProcesses.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.tabControl1_ControlAdded);
+            this.TabProcesses.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.tabControl1_ControlRemoved);
             // 
             // imageList1
             // 
@@ -148,16 +148,16 @@
             this.imageList1.Images.SetKeyName(1, "del");
             this.imageList1.Images.SetKeyName(2, "set");
             // 
-            // ProcessBarContent
+            // FormDockProcessBar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(184, 562);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.TabProcesses);
             this.Controls.Add(this.toolStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "ProcessBarContent";
+            this.Name = "FormDockProcessBar";
             this.Text = "流程栏";
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
@@ -169,7 +169,7 @@
         #endregion
 
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.TabControl tabControl1;
+        public System.Windows.Forms.TabControl TabProcesses;
         private System.Windows.Forms.ToolStripButton tsbDel;
         private System.Windows.Forms.ToolStripButton tsbSet;
         private System.Windows.Forms.ToolStripButton tsbNew;

@@ -11,17 +11,22 @@ using Module;
 
 namespace Demo
 {
-    public partial class ProcessControl : TabPage
+    public partial class ProcessTabPage : TabPage
     {
-        //private MainForm mainForm;
-        public Process VisualProcess { get; set; }
-
-        public ProcessControl(string name, Project project)
+        public ProcessTabPage(string name)
         {
             Name = Text = name;
-            //mainForm = form;
-            VisualProcess = new Process(name, project);
-            
+
+            // 添加流程
+            Process process = new Process(name);
+            Project.GetInstance().Items.Add(name, process);
+
+            if (Project.GetInstance().MainProcess == null)
+            {
+                // 设置主流程
+                Project.GetInstance().MainProcess = process;
+            }
+
             InitializeComponent();
         }
 
@@ -115,8 +120,8 @@ namespace Demo
 
                 sourceControl.Parent = this;
 
-                sourceControl.Module.Owner = VisualProcess;
-                VisualProcess.Items.Add(sourceControl.Module);
+                sourceControl.Module.Owner = Project.GetInstance()[Text];
+                Project.GetInstance()[Text].Items.Add(sourceControl.Module);
             }
             else
             {
@@ -133,8 +138,8 @@ namespace Demo
 
                 sourceControl.Parent = this;
 
-                sourceControl.Module.Owner = VisualProcess;
-                VisualProcess.Items.Insert(sourceControl.Index, sourceControl.Module);
+                sourceControl.Module.Owner = Project.GetInstance().Items[Text];
+                Project.GetInstance().Items[Text].Items.Insert(sourceControl.Index, sourceControl.Module);
 
                 SortModule();
             }
@@ -198,7 +203,7 @@ namespace Demo
 
         private void SortModule()
         {
-            VisualProcess.Items.Sort((m1, m2) =>
+            Project.GetInstance().Items[Text].Items.Sort((m1, m2) =>
             {
                 if (m1.Index > m2.Index)
                 {
@@ -226,7 +231,7 @@ namespace Demo
                 }
             }
 
-            VisualProcess.Items.Remove(sourceControl.Module);
+            Project.GetInstance().Items[Text].Items.Remove(sourceControl.Module);
 
             sourceControl.Dispose();
 
@@ -268,7 +273,7 @@ namespace Demo
 
         private void ProcessControl_TextChanged(object sender, EventArgs e)
         {
-            VisualProcess.Name = Text;
+            Name = Text;
         }
 
         private void ProcessControl_ControlAdded(object sender, ControlEventArgs e)
