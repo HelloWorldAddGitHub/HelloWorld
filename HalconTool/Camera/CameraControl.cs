@@ -7,31 +7,15 @@ using HalconDotNet;
 
 namespace Halcon.Camera
 {
-    [DefaultEvent("DataReceived")]
     public partial class CameraControl : Component
     {
-
-
-
-        public HInterfaceInfo InterfaceInfo = new HInterfaceInfo(HInterfaceName.File);
-        private HInterfaceName interfaceName = HInterfaceName.File;
+        #region 属性
 
         [Browsable(true)]
         [DefaultValue(HInterfaceName.File)]
         [Category("打开相机参数")]
         [Description("HALCON接口名称")]
-        public HInterfaceName InterfaceName
-        {
-            get
-            {
-                return interfaceName;
-            }
-            set
-            {
-                interfaceName = value;
-                InterfaceInfo = new HInterfaceInfo(value);
-            }
-        }
+        public HInterfaceName InterfaceName { get; set; } = HInterfaceName.File;
 
         [Browsable(true)]
         [DefaultValue(-1)]
@@ -134,20 +118,16 @@ namespace Halcon.Camera
         [Description("获取相机是否打开")]
         public bool IsOpen;
 
+        #endregion
 
+        #region 私有字段
 
-        private CancellationTokenSource grabCancelToken;
-        //private HObject image;
         private HTuple acqHandle;
+        private CancellationTokenSource grabCancelToken;
 
+        #endregion
 
-
-        /// <summary>
-        /// 图像采集完成处理事件
-        /// </summary>
-        //[Browsable(true)]
-        //[Description("图像采集完成处理事件")]
-        //public event EventHandler<ImageGrabbedEventArgs> ImageGrabbed;
+        #region 构造方法
 
         public CameraControl()
         {
@@ -184,8 +164,10 @@ namespace Halcon.Camera
 
             InitializeComponent();
         }
-        
 
+        #endregion
+
+        #region 静态方法
 
         /// <summary>
         /// 发现相机
@@ -229,7 +211,7 @@ namespace Halcon.Camera
                         HOperatorSet.InfoFramegrabber(name, "parameters_readonly", out information, out info.ParametersReadonly);
                         HOperatorSet.InfoFramegrabber(name, "parameters_writeonly", out information, out info.ParametersWriteonly);
 
-                        //HOperatorSet.InfoFramegrabber(name, "defaults", out information, out info.Defaults);
+                        HOperatorSet.InfoFramegrabber(name, "defaults", out information, out info.Defaults);
                         //HOperatorSet.InfoFramegrabber(name, "general", out information, out info.General);
                         //HOperatorSet.InfoFramegrabber(name, "revision", out information, out info.Revision);
 
@@ -245,6 +227,9 @@ namespace Halcon.Camera
             return infoList;
         }
 
+        #endregion
+
+        #region 公有方法
 
         /// <summary>
         /// 打开相机
@@ -353,12 +338,12 @@ namespace Halcon.Camera
         /// <summary>
         /// 异步连续采集图像
         /// </summary>
-        public async void GrabStartAsync(Action<HObject> action)
+        public void Start(Action<HObject> action)
         {
             grabCancelToken?.Cancel();
             grabCancelToken = new CancellationTokenSource();
 
-            await Task.Run(() =>
+            Task.Run(() =>
             {
                 try
                 {
@@ -373,7 +358,7 @@ namespace Halcon.Camera
                 }
                 catch (Exception)
                 {
-                    
+
                 }
             });
         }
@@ -382,7 +367,7 @@ namespace Halcon.Camera
         /// <summary>
         /// 停止采集
         /// </summary>
-        public void GrabStop()
+        public void Stop()
         {
             grabCancelToken.Cancel();
         }
@@ -475,5 +460,7 @@ namespace Halcon.Camera
 
             }
         }
+
+        #endregion
     }
 }

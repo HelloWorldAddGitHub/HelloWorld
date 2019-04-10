@@ -80,14 +80,14 @@ namespace Camera
             return null;
         }
 
-        public override async void GrabStartAsync()
+        public override void Start()
         {
             if (camera.StreamGrabber.IsGrabbing)
             {
                 return;
             }
 
-            await Task.Run(() =>
+            Task.Run(() =>
             {
                 camera.StreamGrabber.Start();
 
@@ -125,7 +125,7 @@ namespace Camera
             });
         }
 
-        public override void GrabStop()
+        public override void Stop()
         {
             camera.StreamGrabber.Stop();
         }
@@ -146,7 +146,7 @@ namespace Camera
         {
             pixelType = HPixelType.@byte;
             colorFormat = null;
-            
+
             switch ((PixelType)type)
             {
                 case PixelType.Undefined:
@@ -319,7 +319,7 @@ namespace Camera
         {
             camera.Parameters.Save(fileName, ParameterPath.CameraDevice);
         }
-        
+
         public override void LoadParam(string fileName)
         {
             camera.Parameters.Load(fileName, ParameterPath.CameraDevice);

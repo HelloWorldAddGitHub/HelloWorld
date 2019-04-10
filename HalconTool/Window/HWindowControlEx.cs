@@ -8,23 +8,22 @@ using HalconDotNet;
 
 namespace Halcon.Window
 {
-    public class WindowControl : HWindowControl
+    public class HWindowControlEx : HWindowControl
     {
-        private ContextMenuStrip cmsMain;
+        #region 私有字段
+
         private IContainer components;
+
+        // 菜单
+        private ContextMenuStrip cmsMain;
+        private ToolStripMenuItem tsmiDumpWindow;
         private ToolStripMenuItem tsmiFullDisp;
         private ToolStripMenuItem tsmiCenterDisp;
-        private ToolStripSeparator toolStripSeparator1;
-        private ToolStripMenuItem tsmiOpenImage;
-        private ToolStripMenuItem tsmiSaveImage;
-        private ToolStripSeparator toolStripSeparator2;
         private ToolStripMenuItem tsmiDispCrosshair;
         private ToolStripMenuItem tsmiDispGrid;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripSeparator toolStripSeparator2;
 
-
-        // 读入图像的所有文件名和当前索引
-        private string[] fileNames;
-        private int currentIndex;
 
         // 上一次鼠标位置和图像显示区域
         private Point oldMousePoint;
@@ -33,54 +32,9 @@ namespace Halcon.Window
         // 图像显示区域横纵比
         private double imagePartAspectRatio;
 
+        #endregion
 
-        // 图像
-        private HObject image;
-
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public HObject Image
-        {
-            get
-            {
-                return image;
-            }
-            set
-            {
-                image?.Dispose();
-                image = value;
-
-                if (image != null)
-                {
-                    HOperatorSet.GetImageSize(image, out imageWidth, out imageHeight);
-                    HOperatorSet.GetImageType(image, out imageType);
-                    DispImagePart(ImagePart.X, ImagePart.Y, ImagePart.Width, ImagePart.Height);
-                }
-            }
-        }
-
-        private HTuple imageWidth, imageHeight, imageType;
-        private ToolStripMenuItem tsmiDumpWindow;
-        private ToolStripMenuItem tsmiLastImage;
-        private ToolStripMenuItem tsmiNextImage;
-        private ToolStripSeparator toolStripSeparator3;
-
-        public enum WindowParam
-        {
-            save_depth_buffer, plot_quality, interactive_plot,
-            axis_captions, caption_color, scale_plot, angle_of_view, display_grid,
-            display_axes, window_title, background_color
-        }
-
-
-        public enum HColor
-        {
-            black, white, red, green, blue, cyan, magenta, yellow, dim_gray, gray,
-            light_gray, medium_slate_blue, coral, slate_blue, spring_green,
-            orange_red, orange, dark_olive_green, pink, cadet_blue
-        }
-
-
+        #region 属性
 
         [DefaultValue(false)]
         [Description("设置是否启用右键菜单")]
@@ -111,8 +65,6 @@ namespace Halcon.Window
         }
 
 
-
-
         // 十字线、颜色
         [DefaultValue(false)]
         [Description("获取或设置是否启用十字线")]
@@ -140,44 +92,44 @@ namespace Halcon.Window
         [Description("获取或设置网格中心位置")]
         public GridCenterMode GridCenter { get; set; }
 
+        #endregion
 
-        public enum GridCenterMode { ImaegCenter, ImageOrigin }
+        #region 委托
 
+        /// <summary>
+        /// 获得图像大小
+        /// </summary>
+        public Func<Size> GetImageSize;
 
+        /// <summary>
+        /// 更新窗口
+        /// </summary>
+        public Action UpdateWindow;
 
+        #endregion
 
+        #region 构造函数
 
-        public WindowControl() : base()
+        public HWindowControlEx() : base()
         {
             InitializeComponent();
-
-            //HDevWindowStack.Push(HalconWindow);
-
         }
 
+        #endregion
 
-        ~WindowControl()
-        {
-            image?.Dispose();
-        }
-
+        #region 私有方法
 
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
             this.cmsMain = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsmiOpenImage = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiSaveImage = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiDumpWindow = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmiCenterDisp = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiFullDisp = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmiDispCrosshair = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiDispGrid = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiLastImage = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiNextImage = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsmiDumpWindow = new System.Windows.Forms.ToolStripMenuItem();
             this.cmsMain.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -185,64 +137,52 @@ namespace Halcon.Window
             // 
             this.cmsMain.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cmsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiOpenImage,
-            this.tsmiSaveImage,
             this.tsmiDumpWindow,
             this.toolStripSeparator1,
-            this.tsmiLastImage,
-            this.tsmiNextImage,
-            this.toolStripSeparator2,
             this.tsmiCenterDisp,
             this.tsmiFullDisp,
-            this.toolStripSeparator3,
+            this.toolStripSeparator2,
             this.tsmiDispCrosshair,
             this.tsmiDispGrid});
             this.cmsMain.Name = "menu";
-            this.cmsMain.Size = new System.Drawing.Size(199, 307);
+            this.cmsMain.Size = new System.Drawing.Size(137, 126);
             // 
-            // tsmiOpenImage
+            // tsmiDumpWindow
             // 
-            this.tsmiOpenImage.Name = "tsmiOpenImage";
-            this.tsmiOpenImage.Size = new System.Drawing.Size(198, 28);
-            this.tsmiOpenImage.Text = "打开图像";
-            this.tsmiOpenImage.Click += new System.EventHandler(this.tsmiOpenImage_Click);
-            // 
-            // tsmiSaveImage
-            // 
-            this.tsmiSaveImage.Name = "tsmiSaveImage";
-            this.tsmiSaveImage.Size = new System.Drawing.Size(198, 28);
-            this.tsmiSaveImage.Text = "保存图像";
-            this.tsmiSaveImage.Click += new System.EventHandler(this.tsmiSaveImage_Click);
+            this.tsmiDumpWindow.Name = "tsmiDumpWindow";
+            this.tsmiDumpWindow.Size = new System.Drawing.Size(136, 22);
+            this.tsmiDumpWindow.Text = "保存窗口";
+            this.tsmiDumpWindow.Click += new System.EventHandler(this.tsmiDumpWindow_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(195, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(133, 6);
             // 
             // tsmiCenterDisp
             // 
             this.tsmiCenterDisp.Name = "tsmiCenterDisp";
-            this.tsmiCenterDisp.Size = new System.Drawing.Size(198, 28);
-            this.tsmiCenterDisp.Text = "居中显示";
-            this.tsmiCenterDisp.Click += new System.EventHandler(this.menuCenterDisp_Click);
+            this.tsmiCenterDisp.Size = new System.Drawing.Size(136, 22);
+            this.tsmiCenterDisp.Text = "适应显示";
+            this.tsmiCenterDisp.Click += new System.EventHandler(this.menuDispAdapt_Click);
             // 
             // tsmiFullDisp
             // 
             this.tsmiFullDisp.Name = "tsmiFullDisp";
-            this.tsmiFullDisp.Size = new System.Drawing.Size(198, 28);
-            this.tsmiFullDisp.Text = "填充显示";
-            this.tsmiFullDisp.Click += new System.EventHandler(this.menuFullDisp_Click);
+            this.tsmiFullDisp.Size = new System.Drawing.Size(136, 22);
+            this.tsmiFullDisp.Text = "拉伸显示";
+            this.tsmiFullDisp.Click += new System.EventHandler(this.menuDispStretch_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(195, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(133, 6);
             // 
             // tsmiDispCrosshair
             // 
             this.tsmiDispCrosshair.CheckOnClick = true;
             this.tsmiDispCrosshair.Name = "tsmiDispCrosshair";
-            this.tsmiDispCrosshair.Size = new System.Drawing.Size(198, 28);
+            this.tsmiDispCrosshair.Size = new System.Drawing.Size(136, 22);
             this.tsmiDispCrosshair.Text = "显示十字线";
             this.tsmiDispCrosshair.Click += new System.EventHandler(this.tsmiDispCrosshair_Click);
             // 
@@ -250,39 +190,13 @@ namespace Halcon.Window
             // 
             this.tsmiDispGrid.CheckOnClick = true;
             this.tsmiDispGrid.Name = "tsmiDispGrid";
-            this.tsmiDispGrid.Size = new System.Drawing.Size(198, 28);
+            this.tsmiDispGrid.Size = new System.Drawing.Size(136, 22);
             this.tsmiDispGrid.Text = "显示网格";
             this.tsmiDispGrid.Click += new System.EventHandler(this.tsmiDispGrid_Click);
             // 
-            // tsmiLastImage
+            // HWindowControlEx
             // 
-            this.tsmiLastImage.Name = "tsmiLastImage";
-            this.tsmiLastImage.Size = new System.Drawing.Size(198, 28);
-            this.tsmiLastImage.Text = "上一帧图像";
-            this.tsmiLastImage.Click += new System.EventHandler(this.tsmiLastImage_Click);
-            // 
-            // tsmiNextImage
-            // 
-            this.tsmiNextImage.Name = "tsmiNextImage";
-            this.tsmiNextImage.Size = new System.Drawing.Size(198, 28);
-            this.tsmiNextImage.Text = "下一帧图像";
-            this.tsmiNextImage.Click += new System.EventHandler(this.tsmiNextImage_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(195, 6);
-            // 
-            // tsmiDumpWindow
-            // 
-            this.tsmiDumpWindow.Name = "tsmiDumpWindow";
-            this.tsmiDumpWindow.Size = new System.Drawing.Size(198, 28);
-            this.tsmiDumpWindow.Text = "保存窗口";
-            this.tsmiDumpWindow.Click += new System.EventHandler(this.tsmiDumpWindow_Click);
-            // 
-            // HalconWindow
-            // 
-            this.Name = "HalconWindow";
+            this.Name = "HWindowControlEx";
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.HalconWindow_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.HalconWindow_MouseMove);
             this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.HalconWindow_MouseWheel);
@@ -304,25 +218,27 @@ namespace Halcon.Window
         private void HalconWindow_MouseMove(object sender, MouseEventArgs e)
         {
             // 使鼠标位置在窗口内操作有效
-            if (e.X > 0 && e.X < WindowSize.Width && e.Y > 0 && e.Y < WindowSize.Height)
+            if (e.X > 0 && e.X < WindowSize.Width && e.Y > 0 && e.Y < WindowSize.Height
+                && e.Button == MouseButtons.Left && GetImageSize != null)
             {
-                if (e.Button == MouseButtons.Left && image != null)
-                {
-                    // 图像显示大小和窗口大小的比例
-                    double scaleWidth = 1.0 * ImagePart.Width / WindowSize.Width;
-                    double scaleHeight = 1.0 * ImagePart.Height / WindowSize.Height;
+                // 图像显示大小和窗口大小的比例
+                double scaleWidth = 1.0 * ImagePart.Width / WindowSize.Width;
+                double scaleHeight = 1.0 * ImagePart.Height / WindowSize.Height;
 
-                    // 相对上一个鼠标位置的图像坐标的偏移量
-                    int offsetX = (int)((e.X - oldMousePoint.X) * scaleWidth);
-                    int offsetY = (int)((e.Y - oldMousePoint.Y) * scaleHeight);
+                // 相对上一个鼠标位置的图像坐标的偏移量
+                int offsetX = (int)((e.X - oldMousePoint.X) * scaleWidth);
+                int offsetY = (int)((e.Y - oldMousePoint.Y) * scaleHeight);
 
-                    // 图像显示起点坐标
-                    int x = oldImagePart.X - offsetX;
-                    int y = oldImagePart.Y - offsetY;
+                // 图像显示起点坐标
+                int x = oldImagePart.X - offsetX;
+                int y = oldImagePart.Y - offsetY;
 
-                    // 显示部分图像
-                    DispImagePart(x, y, ImagePart.Width, ImagePart.Height);
-                }
+                // 设置图像显示区域
+                SetImagePart(x, y, ImagePart.Width, ImagePart.Height);
+
+                // 更新显示
+                ClearWindow();
+                UpdateWindow();
             }
         }
 
@@ -330,13 +246,9 @@ namespace Halcon.Window
         private void HalconWindow_MouseWheel(object sender, MouseEventArgs e)
         {
             // 使鼠标位置在窗口内操作有效
-            if (e.X > 0 && e.X < WindowSize.Width && e.Y > 0 && e.Y < WindowSize.Height)
+            if (e.X > 0 && e.X < WindowSize.Width && e.Y > 0 && e.Y < WindowSize.Height
+                && GetImageSize != null)
             {
-                if (image == null)
-                {
-                    return;
-                }
-
                 if (imagePartAspectRatio == 0)
                 {
                     imagePartAspectRatio = 1.0 * ImagePart.Width / ImagePart.Height;
@@ -364,39 +276,30 @@ namespace Halcon.Window
                 x = (int)(ImagePart.X - (partWidth - ImagePart.Width) * (1.0 * e.X / WindowSize.Width));
                 y = (int)(ImagePart.Y - (partHeight - ImagePart.Height) * (1.0 * e.Y / WindowSize.Height));
 
+                // 获取图像大小
+                Size imageSize = GetImageSize();
+
                 // 图像显示过大或过小时不再进行缩放
-                if (partWidth < 5 || partHeight < 5 || partWidth > imageWidth * 50 || partHeight > imageHeight * 50)
+                if (partWidth < 5 || partHeight < 5 || partWidth > imageSize.Width * 50 || partHeight > imageSize.Height * 50)
                 {
                     return;
                 }
 
                 // 显示部分图像
-                DispImagePart(x, y, partWidth, partHeight);
+                SetImagePart(x, y, partWidth, partHeight);
+
+                // 更新显示
+                ClearWindow();
+                UpdateWindow();
             }
         }
 
 
         private void HalconWindow_Resize(object sender, EventArgs e)
         {
-            if (image != null)
-            {
-                DispImagePart(ImagePart.X, ImagePart.Y, ImagePart.Width, ImagePart.Height);
-            }
-        }
-
-
-
-        /// <summary>
-        /// 显示对象
-        /// </summary>
-        /// <param name="objectVal"></param>
-        public void DispObj(HObject objectVal)
-        {
-            image?.Dispose();
-            image = objectVal;
-            HOperatorSet.GetImageSize(image, out imageWidth, out imageHeight);
-            HOperatorSet.GetImageType(image, out imageType);
-            DispImagePart(ImagePart.X, ImagePart.Y, ImagePart.Width, ImagePart.Height);
+            SetImagePart(ImagePart.X, ImagePart.Y, ImagePart.Width, ImagePart.Height);
+            ClearWindow();
+            UpdateWindow();
         }
 
 
@@ -408,108 +311,124 @@ namespace Halcon.Window
         /// <param name="width">显示区域的宽</param>
         /// <param name="height">显示区域的高</param>
         /// <param name="setAspectRatio">是否设置图像的横纵比</param>
-        private void DispImagePart(int x = 0, int y = 0, int width = -1, int height = -1, bool setAspectRatio = false)
+        private void SetImagePart(int x = 0, int y = 0, int width = -1, int height = -1, bool setAspectRatio = false)
         {
-            try
+            // 设置图像显示的横纵比
+            if (setAspectRatio)
             {
-                // 设置图像显示的横纵比
-                if (setAspectRatio)
-                {
-                    imagePartAspectRatio = 1.0 * width / height;
-                }
-
-                // 设置默认大小
-                if (width == -1 || height == -1)
-                {
-                    if (imageWidth == null)
-                    {
-                        width = ImagePart.Width;
-                        height = ImagePart.Height;
-                    }
-                    else
-                    {
-                        width = imageWidth;
-                        height = imageHeight;
-                    }
-
-                    imagePartAspectRatio = 1.0 * width / height;
-                }
-
-                // 显示图像部分到窗口
-                ImagePart = new Rectangle(x, y, width, height);
-                HOperatorSet.SetSystem("flush_graphic", "false");
-                HOperatorSet.ClearWindow(HalconWindow);
-                HOperatorSet.SetSystem("flush_graphic", "true");
-                HOperatorSet.DispObj(image, HalconWindow);
-
-                // 显示网格
-                if (Grid)
-                {
-                    DispGrid();
-                }
-
-                // 显示十字线
-                if (Crosshair)
-                {
-                    DispCrosshair();
-                }
+                imagePartAspectRatio = 1.0 * width / height;
             }
-            catch (Exception)
+
+            // 设置默认大小
+            if (width == -1 || height == -1)
             {
+                if (GetImageSize != null)
+                {
+                    Size imageSize = GetImageSize();
+                    width = imageSize.Width;
+                    height = imageSize.Height;
+                }
+                else
+                {
+                    width = ImagePart.Width;
+                    height = ImagePart.Height;
+                }
 
+                imagePartAspectRatio = 1.0 * width / height;
             }
+
+            // 设置图像显示区域
+            ImagePart = new Rectangle(x, y, width, height);
         }
 
+        #endregion
+
+        #region 读写操作
 
         /// <summary>
         /// 打开图像对话框
         /// </summary>
-        public void OpenImageDialog()
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Title = "打开图像";
-            ofd.Multiselect = true;
-            ofd.Filter = "图像文件|*.ima;*.tif;*.tiff;*.gif;*.bmp;*.jpg;*.jpeg;*.jp2;*.jxr;*.png;*.pcx;*.ras;*.xwd;*.pbm;*.pnm;*.pgm;*.ppm|所有文件|*.*";
+        //public void OpenImageDialog()
+        //{
+        //    OpenFileDialog ofd = new OpenFileDialog();
+        //    ofd.Title = "打开图像";
+        //    ofd.Multiselect = true;
+        //    ofd.Filter = "图像文件|*.ima;*.tif;*.tiff;*.gif;*.bmp;*.jpg;*.jpeg;*.jp2;*.jxr;*.png;*.pcx;*.ras;*.xwd;*.pbm;*.pnm;*.pgm;*.ppm|所有文件|*.*";
 
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                fileNames = ofd.FileNames;
-                for (int i = 0; i < fileNames.Count(); i++)
-                {
-                    fileNames[i] = fileNames[i].Replace("\\", "/");
-                }
+        //    if (ofd.ShowDialog() == DialogResult.OK)
+        //    {
+        //        fileNames = ofd.FileNames;
+        //        for (int i = 0; i < fileNames.Count(); i++)
+        //        {
+        //            fileNames[i] = fileNames[i].Replace("\\", "/");
+        //        }
 
-                image?.Dispose();
-                HOperatorSet.ReadImage(out image, fileNames[currentIndex = 0]);
-                HOperatorSet.GetImageSize(image, out imageWidth, out imageHeight);
-                HOperatorSet.GetImageType(image, out imageType);
-                DispImagePart();
-            }
-        }
+        //        image?.Dispose();
+        //        HOperatorSet.ReadImage(out image, fileNames[currentIndex = 0]);
+        //        HOperatorSet.GetImageSize(image, out imageWidth, out imageHeight);
+        //        HOperatorSet.GetImageType(image, out imageType);
+        //        DispImagePart();
+        //    }
+        //}
 
 
         /// <summary>
         /// 保存图像对话框
         /// </summary>
-        public void SaveImageDialog()
+        //public void SaveImageDialog()
+        //{
+        //    SaveFileDialog sfd = new SaveFileDialog();
+        //    sfd.Title = "保存图像";
+        //    sfd.Filter = "可移植网络图形格式(*.png)|*.png|Tag图像文件格式(*.tiff)|*.tiff|设备无关位图(*.bmp)|*.bmp|文件交换格式(*.jpeg)|*.jpeg";
+
+        //    if (sfd.ShowDialog() == DialogResult.OK)
+        //    {
+        //        string fileName = sfd.FileName.Replace("\\", "/");
+        //        string ext = Path.GetExtension(sfd.FileName).Replace(".", "");
+        //        HOperatorSet.WriteImage(image, ext, 0, fileName);
+        //    }
+        //}
+
+
+        /// <summary>
+        /// 读取图像
+        /// </summary>
+        /// <param name="fileName">文件名称</param>
+        //public void ReadImage(string fileName)
+        //{
+        //    image?.Dispose();
+        //    HOperatorSet.ReadImage(out image, fileName.Replace("\\", "/"));
+        //    HOperatorSet.GetImageSize(image, out imageWidth, out imageHeight);
+        //    HOperatorSet.GetImageType(image, out imageType);
+        //    DispImagePart();
+        //}
+
+
+        /// <summary>
+        /// 写入图像
+        /// </summary>
+        /// <param name="fileName">文件名称</param>
+        //public void WriteImage(string fileName)
+        //{
+        //    string name = fileName.Replace("\\", "/");
+        //    string ext = Path.GetExtension(fileName).Replace(".", "");
+        //    HOperatorSet.WriteImage(image, ext, 0, name);
+        //}
+
+        #endregion
+
+        #region 公有方法
+
+        public void Init(Func<Size> getImageSizeMethod, Action updateWindowMethod)
         {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Title = "保存图像";
-            sfd.Filter = "可移植网络图形格式(*.png)|*.png|Tag图像文件格式(*.tiff)|*.tiff|设备无关位图(*.bmp)|*.bmp|文件交换格式(*.jpeg)|*.jpeg";
-
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                string fileName = sfd.FileName.Replace("\\", "/");
-                string ext = Path.GetExtension(sfd.FileName).Replace(".", "");
-                HOperatorSet.WriteImage(image, ext, 0, fileName);
-            }
+            GetImageSize = getImageSizeMethod;
+            UpdateWindow = updateWindowMethod;
         }
-
 
         /// <summary>
         /// 保存窗口内容对话框
         /// </summary>
-        private void DumpWindowDialog()
+        public void DumpWindowDialog()
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Title = "保存窗口";
@@ -525,33 +444,7 @@ namespace Halcon.Window
 
 
         /// <summary>
-        /// 读取图像
-        /// </summary>
-        /// <param name="fileName">文件名称</param>
-        public void ReadImage(string fileName)
-        {
-            image?.Dispose();
-            HOperatorSet.ReadImage(out image, fileName.Replace("\\", "/"));
-            HOperatorSet.GetImageSize(image, out imageWidth, out imageHeight);
-            HOperatorSet.GetImageType(image, out imageType);
-            DispImagePart();
-        }
-
-
-        /// <summary>
-        /// 写入图像
-        /// </summary>
-        /// <param name="fileName">文件名称</param>
-        public void WriteImage(string fileName)
-        {
-            string name = fileName.Replace("\\", "/");
-            string ext = Path.GetExtension(fileName).Replace(".", "");
-            HOperatorSet.WriteImage(image, ext, 0, name);
-        }
-
-
-        /// <summary>
-        /// 写入窗口内容
+        /// 写入窗口内容到文件
         /// </summary>
         /// <param name="fileName">文件名称</param>
         public void DumpWindow(string fileName)
@@ -566,68 +459,34 @@ namespace Halcon.Window
         /// 写入窗口内容到图像
         /// </summary>
         /// <returns>窗口图像</returns>
-        public void DumpWindowImage()
+        public void DumpWindowImage(out HObject image)
         {
             HOperatorSet.DumpWindowImage(out image, HalconWindow);
         }
 
 
         /// <summary>
-        /// 显示上一帧图像
+        /// 拉伸显示图像，图像适应窗口
         /// </summary>
-        public void SetLastImage()
+        public void SetImagePartStretch()
         {
-            if (currentIndex > 0)
-            {
-                image?.Dispose();
-                HOperatorSet.ReadImage(out image, fileNames[--currentIndex]);
-                HOperatorSet.GetImageSize(image, out imageWidth, out imageHeight);
-                HOperatorSet.GetImageType(image, out imageType);
-                DispImagePart();
-            }
+            // 设置图像显示区域
+            SetImagePart();
         }
 
 
         /// <summary>
-        /// 显示下一帧图像
+        /// 适应显示图像，等比缩放，最大化显示
         /// </summary>
-        public void SetNextImage()
+        public void SetImagePartAdapt()
         {
-            if (currentIndex < fileNames?.Count() - 1)
-            {
-                image?.Dispose();
-                HOperatorSet.ReadImage(out image, fileNames[++currentIndex]);
-                HOperatorSet.GetImageSize(image, out imageWidth, out imageHeight);
-                HOperatorSet.GetImageType(image, out imageType);
-                DispImagePart();
-            }
-        }
-
-
-        /// <summary>
-        /// 填充显示图像
-        /// </summary>
-        public void SetFullImagePart()
-        {
-            if (image == null)
+            if (GetImageSize == null)
             {
                 return;
             }
 
-            // 显示部分图像
-            DispImagePart();
-        }
-
-
-        /// <summary>
-        /// 居中显示图像
-        /// </summary>
-        public void SetCenterImagePart()
-        {
-            if (image == null)
-            {
-                return;
-            }
+            // 获取图像大小
+            Size imageSize = GetImageSize();
 
             // ImagePart 参数
             int x, y, width, height;
@@ -636,28 +495,28 @@ namespace Halcon.Window
             double windowScale = 1.0 * WindowSize.Width / WindowSize.Height;
 
             // 图像宽高与控件宽高比
-            double widthScale = imageWidth.D / WindowSize.Width;
-            double heightScale = imageHeight.D / WindowSize.Height;
+            double widthScale = 1.0 * imageSize.Width / WindowSize.Width;
+            double heightScale = 1.0 * imageSize.Height / WindowSize.Height;
 
             if (widthScale > heightScale)
             {
                 // 以图像宽度为基准对图像等比例缩放
-                width = imageWidth;
-                height = (int)(imageWidth.D / windowScale);
+                width = imageSize.Width;
+                height = (int)(imageSize.Width / windowScale);
                 x = 0;
-                y = (imageHeight - height) / 2;
+                y = (imageSize.Height - height) / 2;
             }
             else
             {
                 // 以图像高度为基准对图像等比例缩放
-                width = (int)(imageHeight.D * windowScale);
-                height = imageHeight;
-                x = (imageWidth - width) / 2;
+                width = (int)(imageSize.Height * windowScale);
+                height = imageSize.Height;
+                x = (imageSize.Width - width) / 2;
                 y = 0;
             }
 
-            // 显示部分图像
-            DispImagePart(x, y, width, height, true);
+            // 设置图像显示区域
+            SetImagePart(x, y, width, height, true);
         }
 
 
@@ -665,24 +524,20 @@ namespace Halcon.Window
         /// 窗口适应图像显示
         /// </summary>
         /// <param name="zoom">窗口相对图像大小的比例因子</param>
-        public void SetWindowAdaptedImage(double zoom = 1)
+        public void SetWindowAdaptedImage(float zoom = 1)
         {
-            try
+            if (GetImageSize == null)
             {
-                if (image == null)
-                {
-                    return;
-                }
-
-                // 设置窗口适应图像的大小
-                WindowSize = new Size((int)(imageWidth.D * zoom), (int)(imageHeight.D * zoom));
-
-                DispImagePart();
+                return;
             }
-            catch (Exception)
-            {
 
-            }
+            // 获取图像大小
+            Size imageSize = GetImageSize();
+
+            // 设置窗口适应图像的大小
+            WindowSize = new Size((int)(imageSize.Width * zoom), (int)(imageSize.Height * zoom));
+
+            SetImagePart();
         }
 
 
@@ -696,14 +551,15 @@ namespace Halcon.Window
         {
             try
             {
-                if (imageWidth == null)
+                Size imageSize = ImagePart.Size;
+
+                if (GetImageSize != null)
                 {
-                    imageWidth = ImagePart.Width;
-                    imageHeight = ImagePart.Height;
+                    imageSize = GetImageSize();
                 }
 
-                double centerRow = imageHeight.D / 2;
-                double centerColumn = imageWidth.D / 2;
+                double centerRow = imageSize.Height / 2;
+                double centerColumn = imageSize.Width / 2;
 
                 // 设置线宽和颜色
                 HOperatorSet.SetLineWidth(HalconWindow, 1);
@@ -741,16 +597,12 @@ namespace Halcon.Window
                 // 中心坐标
                 double row = 0, column = 0;
 
-                if (GridCenter == GridCenterMode.ImaegCenter)
+                if (GridCenter == GridCenterMode.ImaegCenter && GetImageSize != null)
                 {
-                    if (imageWidth == null)
-                    {
-                        imageWidth = ImagePart.Width;
-                        imageHeight = ImagePart.Height;
-                    }
+                    Size imageSize = GetImageSize();
 
-                    row = imageHeight.D / 2;
-                    column = imageWidth.D / 2;
+                    row = imageSize.Height / 2;
+                    column = imageSize.Width / 2;
                 }
 
                 // 设置线宽和颜色
@@ -814,17 +666,20 @@ namespace Halcon.Window
         /// <param name="row">像素行坐标</param>
         /// <param name="column">像素列坐标</param>
         /// <returns></returns>
-        public HTuple GetGrayval(int row, int column)
+        public HTuple GetGrayval(HObject image, int row, int column)
         {
             try
             {
-                if (image == null)
+                if (GetImageSize == null)
                 {
                     return null;
                 }
 
+                // 获取图像大小
+                Size imageSize = GetImageSize();
+
                 // 在图像内获取像素灰度值
-                if (row >= 0 && row < imageHeight && column >= 0 && column < imageWidth)
+                if (row >= 0 && row < imageSize.Height && column >= 0 && column < imageSize.Width)
                 {
                     HTuple grayval;
                     HOperatorSet.GetGrayval(image, row, column, out grayval);
@@ -866,45 +721,54 @@ namespace Halcon.Window
 
 
         /// <summary>
+        /// 显示对象
+        /// </summary>
+        /// <param name="objectVal"></param>
+        public void DispObj(HObject objectVal)
+        {
+            // 显示对象
+            HOperatorSet.DispObj(objectVal, HalconWindow);
+
+            // 显示网格
+            if (Grid)
+            {
+                DispGrid();
+            }
+
+            // 显示十字线
+            if (Crosshair)
+            {
+                DispCrosshair();
+            }
+        }
+
+
+        /// <summary>
         /// 清理窗口
         /// </summary>
         public void ClearWindow()
         {
+            HOperatorSet.SetSystem("flush_graphic", "false");
             HOperatorSet.ClearWindow(HalconWindow);
+            HOperatorSet.SetSystem("flush_graphic", "true");
         }
 
+        #endregion
 
+        #region 菜单
 
-
-
-        private void tsmiOpenImage_Click(object sender, EventArgs e)
+        private void menuDispStretch_Click(object sender, EventArgs e)
         {
-            OpenImageDialog();
+            SetImagePartStretch();
+            ClearWindow();
+            UpdateWindow();
         }
 
-        private void tsmiSaveImage_Click(object sender, EventArgs e)
+        private void menuDispAdapt_Click(object sender, EventArgs e)
         {
-            SaveImageDialog();
-        }
-
-        private void menuFullDisp_Click(object sender, EventArgs e)
-        {
-            SetFullImagePart();
-        }
-
-        private void menuCenterDisp_Click(object sender, EventArgs e)
-        {
-            SetCenterImagePart();
-        }
-
-        private void tsmiLastImage_Click(object sender, EventArgs e)
-        {
-            SetLastImage();
-        }
-
-        private void tsmiNextImage_Click(object sender, EventArgs e)
-        {
-            SetNextImage();
+            SetImagePartAdapt();
+            ClearWindow();
+            UpdateWindow();
         }
 
         private void tsmiDumpWindow_Click(object sender, EventArgs e)
@@ -923,10 +787,8 @@ namespace Halcon.Window
                 Crosshair = false;
             }
 
-            if (image != null)
-            {
-                DispImagePart(ImagePart.X, ImagePart.Y, ImagePart.Width, ImagePart.Height);
-            }
+            ClearWindow();
+            UpdateWindow();
         }
 
         private void tsmiDispGrid_Click(object sender, EventArgs e)
@@ -940,22 +802,24 @@ namespace Halcon.Window
                 Grid = false;
             }
 
-            if (image != null)
-            {
-                DispImagePart(ImagePart.X, ImagePart.Y, ImagePart.Width, ImagePart.Height);
-            }
+            ClearWindow();
+            UpdateWindow();
         }
 
+        #endregion
 
+        #region 隐式类型转换
 
-        public static implicit operator HWindow(WindowControl hWindow)
+        public static implicit operator HWindow(HWindowControlEx hWindow)
         {
             return hWindow.HalconWindow;
         }
 
-        public static implicit operator HTuple(WindowControl hWindow)
+        public static implicit operator HTuple(HWindowControlEx hWindow)
         {
             return hWindow.HalconWindow;
         }
+
+        #endregion
     }
 }

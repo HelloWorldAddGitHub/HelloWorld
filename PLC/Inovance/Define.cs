@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Halcon.Halcon.Camera
+namespace PLC.Inovance
 {
-    class HEnumAttribute
+    public class Define
     {
+
     }
 }

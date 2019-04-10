@@ -5,12 +5,45 @@ namespace Halcon.Camera
 {
     public class HInterfaceInfo
     {
+        public HInterfaceName InterfaceName;         //HALCON图像获取接口
+
+        public HTuple HorizontalResolution; //水平分辨率
+        public HTuple VerticalResolution;   //垂直分辨率
+        public HTuple ImageWidth;           //图像宽度
+        public HTuple ImageHeight;          //图像高度
+        public HTuple StartRow;             //开始行
+        public HTuple StartColumn;          //开始列
+        public HTuple Field;                //半图像或全图像 "first", "second", "next", "interlaced", "progressive", "default" 
+        public HTuple BitsPerChannel;       //每个像素的传输位和图像通道的数量
+        public HTuple ColorSpace;           //颜色空间 "gray", "raw", "rgb", "yuv", "default" 
+        public HTuple Generic;              //通用参数
+        public HTuple ExternalTrigger;      //外触发 "true", "false", "default" 
+        public HTuple CameraType;           //相机类型 "ntsc", "pal", "auto", "default" 
+        public HTuple Device;               //设备
+        public HTuple Port;                 //端口
+        public HTuple LineIn;               //多路复用器的摄像机输入线
+
+        public HTuple Parameters;           //读写参数
+        public HTuple ParametersReadonly;   //只读参数
+        public HTuple ParametersWriteonly;  //只写参数
+
+        public HTuple Defaults;             //open_framegrabber的默认值
+        public HTuple General;              //一般信息
+        public HTuple InfoBoards;           //相机信息
+        public HTuple Revision;             //版本号
+
+
         public HInterfaceInfo()
         {
 
         }
 
         public HInterfaceInfo(HInterfaceName interfaceName)
+        {
+            SetInterface(InterfaceName);
+        }
+
+        public void SetInterface(HInterfaceName interfaceName)
         {
             try
             {
@@ -52,32 +85,6 @@ namespace Halcon.Camera
 
             }
         }
-
-        public HInterfaceName InterfaceName;         //HALCON图像获取接口
-
-        public HTuple HorizontalResolution; //水平分辨率
-        public HTuple VerticalResolution;   //垂直分辨率
-        public HTuple ImageWidth;           //图像宽度
-        public HTuple ImageHeight;          //图像高度
-        public HTuple StartRow;             //开始行
-        public HTuple StartColumn;          //开始列
-        public HTuple Field;                //半图像或全图像 "first", "second", "next", "interlaced", "progressive", "default" 
-        public HTuple BitsPerChannel;       //每个像素的传输位和图像通道的数量
-        public HTuple ColorSpace;           //颜色空间 "gray", "raw", "rgb", "yuv", "default" 
-        public HTuple Generic;              //通用参数
-        public HTuple ExternalTrigger;      //外触发 "true", "false", "default" 
-        public HTuple CameraType;           //相机类型 "ntsc", "pal", "auto", "default" 
-        public HTuple Device;               //设备
-        public HTuple Port;                 //端口
-        public HTuple LineIn;               //多路复用器的摄像机输入线
-
-        public HTuple Parameters;           //读写参数
-        public HTuple ParametersReadonly;   //只读参数
-        public HTuple ParametersWriteonly;  //只写参数
-
-        public HTuple Defaults;             //open_framegrabber的默认值
-        public HTuple General;              //一般信息
-        public HTuple InfoBoards;           //相机信息
-        public HTuple Revision;             //版本号
+        
     }
 }

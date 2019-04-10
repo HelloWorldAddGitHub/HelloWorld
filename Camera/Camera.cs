@@ -103,12 +103,12 @@ namespace Camera
         /// <summary>
         /// 异步连续采集图像
         /// </summary>
-        public abstract void GrabStartAsync();
+        public abstract void Start();
 
         /// <summary>
         /// 停止采集图像
         /// </summary>
-        public abstract void GrabStop();
+        public abstract void Stop();
 
         /// <summary>
         /// 关闭相机
