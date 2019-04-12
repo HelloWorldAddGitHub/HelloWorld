@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.Window = new Halcon.Window.HWindowControlEx();
+            this.Window = new HalconEx.Window.HWindowControlEx();
             this.SuspendLayout();
             // 
             // halconWindow1
@@ -61,6 +61,6 @@
 
         #endregion
 
-        public Halcon.Window.HWindowControlEx Window;
+        public HalconEx.Window.HWindowControlEx Window;
     }
 }

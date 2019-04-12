@@ -7,15 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Halcon.Window;
-using Halcon.Camera;
+using HalconEx.Window;
+using HalconEx.Camera;
 using HalconDotNet;
+using HalconEx;
 
 namespace test
 {
     public partial class Form1 : Form
     {
         public HObject Image;
+        HDevelopExport h = new HDevelopExport();
 
         public Form1()
         {
@@ -24,12 +26,31 @@ namespace test
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            hWindowControlEx1.Init(GetImageSize,
+            h.InitHalcon();
+
+            hWindowControlEx1.Init(
                 () =>
                 {
-                    if (Image != null && Image.IsInitialized())
+                    if (h.ho_Image != null && h.ho_Image.IsInitialized())
                     {
-                        hWindowControlEx1.DispObj(Image);
+                        HTuple width, height;
+                        HOperatorSet.GetImageSize(h.ho_Image, out width, out height);
+                        return new Size(width, height);
+                    }
+                    else
+                    {
+                        return new Size(640, 480);
+                    }
+                },
+
+                () =>
+                {
+                    if (h.ho_Image != null && h.ho_Image.IsInitialized())
+                    {
+                        HOperatorSet.SetColor(hWindowControlEx1, "green");
+                        HOperatorSet.DispObj(h.ho_Image, hWindowControlEx1);
+                        //HOperatorSet.DispObj(h.ho_ContoursTrans, hWindowControlEx1);
+                        hWindowControlEx1.DispObj();
                     }
                 });
         }
@@ -50,46 +71,33 @@ namespace test
 
         private void button1_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Title = "打开图像";
-            //ofd.Multiselect = true;
-            ofd.Filter = "图像文件|*.ima;*.tif;*.tiff;*.gif;*.bmp;*.jpg;*.jpeg;*.jp2;*.jxr;*.png;*.pcx;*.ras;*.xwd;*.pbm;*.pnm;*.pgm;*.ppm|所有文件|*.*";
-
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                string fileName = ofd.FileName;
-                //for (int i = 0; i < fileNames.Count(); i++)
-                //{
-                //    fileNames[i] = fileNames[i].Replace("\\", "/");
-                //}
-
-                Image?.Dispose();
-                HOperatorSet.ReadImage(out Image, fileName);
-                hWindowControlEx1.ClearWindow();
-                hWindowControlEx1.SetImagePartAdapt();
-                hWindowControlEx1.DispObj(Image);
-                //HOperatorSet.GetImageSize(Image, out imageWidth, out imageHeight);
-                //HOperatorSet.GetImageType(Image, out imageType);
-                //DispImagePart();
-            }
+            h.ho_Image = HalconExtension.OpenImageDialog();
+            hWindowControlEx1.ClearWindow();
+            hWindowControlEx1.SetImagePartAdapt();
+            hWindowControlEx1.DispObj(h.ho_Image);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             //var info = CameraControl.Find();
-
+            hWindowControlEx1.ClearWindow();
             cameraControl1.Open();
             cameraControl1.Start((image) =>
             {
-                Image = image;
-                hWindowControlEx1.DispObj(image);
-                //HOperatorSet.DispObj(image, hWindowControlEx1);
+                h.ho_Image = image;
+                hWindowControlEx1.DispObj(h.ho_Image);
             });
+            hWindowControlEx1.SetImagePartAdapt();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             cameraControl1.Close();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            h.RunHalcon(hWindowControlEx1);
         }
     }
 }

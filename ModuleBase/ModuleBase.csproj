@@ -50,9 +50,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HalconTool\HalconControl.csproj">
+    <ProjectReference Include="..\HalconEx\HalconEx.csproj">
       <Project>{D1EE9AE5-04A9-49B2-B455-F4D2F0E724CA}</Project>
-      <Name>HalconControl</Name>
+      <Name>HalconEx</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

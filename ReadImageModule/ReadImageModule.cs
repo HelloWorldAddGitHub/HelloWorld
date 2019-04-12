@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Halcon.Window;
+using HalconEx.Window;
 using HalconDotNet;
 
 namespace Module

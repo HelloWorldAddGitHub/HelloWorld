@@ -55,9 +55,9 @@
     <Compile Include="ReadImageModule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HalconTool\HalconControl.csproj">
+    <ProjectReference Include="..\HalconEx\HalconEx.csproj">
       <Project>{D1EE9AE5-04A9-49B2-B455-F4D2F0E724CA}</Project>
-      <Name>HalconControl</Name>
+      <Name>HalconEx</Name>
     </ProjectReference>
     <ProjectReference Include="..\ModuleBase\ModuleBase.csproj">
       <Project>{56897B23-E228-43C2-81F0-68A9EAD8C7C3}</Project>

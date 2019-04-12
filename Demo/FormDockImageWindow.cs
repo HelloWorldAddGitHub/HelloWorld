@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Halcon.Window;
+using HalconEx.Window;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Demo
