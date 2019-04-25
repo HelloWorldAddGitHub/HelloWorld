@@ -16,5 +16,8 @@
     }
 
 
+    public enum LeftModes { Move, Select }
+
+
     public enum GridCenterMode { ImaegCenter, ImageOrigin }
 }

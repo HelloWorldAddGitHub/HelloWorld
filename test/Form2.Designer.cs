@@ -28,51 +28,36 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.dataTreeListView1 = new BrightIdeasSoftware.DataTreeListView();
-            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            ((System.ComponentModel.ISupportInitialize)(this.dataTreeListView1)).BeginInit();
+            this.hWindowControlEx1 = new HalconEx.Window.HWindowControlEx();
             this.SuspendLayout();
             // 
-            // dataTreeListView1
+            // hWindowControlEx1
             // 
-            this.dataTreeListView1.AllColumns.Add(this.olvColumn1);
-            this.dataTreeListView1.CellEditUseWholeCell = false;
-            this.dataTreeListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.olvColumn1});
-            this.dataTreeListView1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.dataTreeListView1.DataSource = null;
-            this.dataTreeListView1.Location = new System.Drawing.Point(12, 12);
-            this.dataTreeListView1.Name = "dataTreeListView1";
-            this.dataTreeListView1.RootKeyValueString = "";
-            this.dataTreeListView1.ShowGroups = false;
-            this.dataTreeListView1.Size = new System.Drawing.Size(510, 359);
-            this.dataTreeListView1.TabIndex = 0;
-            this.dataTreeListView1.UseCompatibleStateImageBehavior = false;
-            this.dataTreeListView1.View = System.Windows.Forms.View.Details;
-            this.dataTreeListView1.VirtualMode = true;
-            // 
-            // olvColumn1
-            // 
-            this.olvColumn1.Text = "Names";
+            this.hWindowControlEx1.BackColor = System.Drawing.Color.Black;
+            this.hWindowControlEx1.BorderColor = System.Drawing.Color.Black;
+            this.hWindowControlEx1.ImagePart = new System.Drawing.Rectangle(0, 0, 640, 480);
+            this.hWindowControlEx1.LeftMode = HalconEx.Window.LeftModes.Select;
+            this.hWindowControlEx1.Location = new System.Drawing.Point(12, 12);
+            this.hWindowControlEx1.Name = "hWindowControlEx1";
+            this.hWindowControlEx1.Size = new System.Drawing.Size(510, 357);
+            this.hWindowControlEx1.TabIndex = 0;
+            this.hWindowControlEx1.WindowSize = new System.Drawing.Size(510, 357);
             // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(534, 422);
-            this.Controls.Add(this.dataTreeListView1);
+            this.Controls.Add(this.hWindowControlEx1);
             this.Name = "Form2";
             this.Text = "Form2";
             this.Load += new System.EventHandler(this.Form2_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dataTreeListView1)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private BrightIdeasSoftware.DataTreeListView dataTreeListView1;
-        private BrightIdeasSoftware.OLVColumn olvColumn1;
+        private HalconEx.Window.HWindowControlEx hWindowControlEx1;
     }
 }

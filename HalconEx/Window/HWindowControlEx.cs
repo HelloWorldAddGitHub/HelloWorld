@@ -21,8 +21,10 @@ namespace HalconEx.Window
         private ToolStripMenuItem tsmiCenterDisp;
         private ToolStripMenuItem tsmiDispCrosshair;
         private ToolStripMenuItem tsmiDispGrid;
+        private ToolStripMenuItem tsmiLeftMoveMode;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripSeparator toolStripSeparator2;
+        private ToolStripSeparator toolStripSeparator3;
 
 
         // 上一次鼠标位置和图像显示区域
@@ -63,6 +65,11 @@ namespace HalconEx.Window
                 }
             }
         }
+
+
+        [DefaultValue(LeftModes.Move)]
+        [Description("获取或设置左键移动模式")]
+        public LeftModes LeftMode { get; set; }
 
 
         // 十字线、颜色
@@ -130,6 +137,8 @@ namespace HalconEx.Window
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmiDispCrosshair = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiDispGrid = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiLeftMoveMode = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.cmsMain.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -143,46 +152,48 @@ namespace HalconEx.Window
             this.tsmiFullDisp,
             this.toolStripSeparator2,
             this.tsmiDispCrosshair,
-            this.tsmiDispGrid});
+            this.tsmiDispGrid,
+            this.toolStripSeparator3,
+            this.tsmiLeftMoveMode});
             this.cmsMain.Name = "menu";
-            this.cmsMain.Size = new System.Drawing.Size(137, 126);
+            this.cmsMain.Size = new System.Drawing.Size(153, 176);
             // 
             // tsmiDumpWindow
             // 
             this.tsmiDumpWindow.Name = "tsmiDumpWindow";
-            this.tsmiDumpWindow.Size = new System.Drawing.Size(136, 22);
+            this.tsmiDumpWindow.Size = new System.Drawing.Size(152, 22);
             this.tsmiDumpWindow.Text = "保存窗口";
             this.tsmiDumpWindow.Click += new System.EventHandler(this.tsmiDumpWindow_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(133, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // tsmiCenterDisp
             // 
             this.tsmiCenterDisp.Name = "tsmiCenterDisp";
-            this.tsmiCenterDisp.Size = new System.Drawing.Size(136, 22);
+            this.tsmiCenterDisp.Size = new System.Drawing.Size(152, 22);
             this.tsmiCenterDisp.Text = "适应显示";
             this.tsmiCenterDisp.Click += new System.EventHandler(this.menuDispAdapt_Click);
             // 
             // tsmiFullDisp
             // 
             this.tsmiFullDisp.Name = "tsmiFullDisp";
-            this.tsmiFullDisp.Size = new System.Drawing.Size(136, 22);
+            this.tsmiFullDisp.Size = new System.Drawing.Size(152, 22);
             this.tsmiFullDisp.Text = "拉伸显示";
             this.tsmiFullDisp.Click += new System.EventHandler(this.menuDispStretch_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(133, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
             // 
             // tsmiDispCrosshair
             // 
             this.tsmiDispCrosshair.CheckOnClick = true;
             this.tsmiDispCrosshair.Name = "tsmiDispCrosshair";
-            this.tsmiDispCrosshair.Size = new System.Drawing.Size(136, 22);
+            this.tsmiDispCrosshair.Size = new System.Drawing.Size(152, 22);
             this.tsmiDispCrosshair.Text = "显示十字线";
             this.tsmiDispCrosshair.Click += new System.EventHandler(this.tsmiDispCrosshair_Click);
             // 
@@ -190,9 +201,22 @@ namespace HalconEx.Window
             // 
             this.tsmiDispGrid.CheckOnClick = true;
             this.tsmiDispGrid.Name = "tsmiDispGrid";
-            this.tsmiDispGrid.Size = new System.Drawing.Size(136, 22);
+            this.tsmiDispGrid.Size = new System.Drawing.Size(152, 22);
             this.tsmiDispGrid.Text = "显示网格";
             this.tsmiDispGrid.Click += new System.EventHandler(this.tsmiDispGrid_Click);
+            // 
+            // tsmiLeftMoveMode
+            // 
+            this.tsmiLeftMoveMode.CheckOnClick = true;
+            this.tsmiLeftMoveMode.Name = "tsmiLeftMoveMode";
+            this.tsmiLeftMoveMode.Size = new System.Drawing.Size(152, 22);
+            this.tsmiLeftMoveMode.Text = "选择模式";
+            this.tsmiLeftMoveMode.Click += new System.EventHandler(this.tsmiLeftMoveMode_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(149, 6);
             // 
             // HWindowControlEx
             // 
@@ -218,8 +242,8 @@ namespace HalconEx.Window
         private void HalconWindow_MouseMove(object sender, MouseEventArgs e)
         {
             // 使鼠标位置在窗口内操作有效
-            if (e.X > 0 && e.X < WindowSize.Width && e.Y > 0 && e.Y < WindowSize.Height
-                && e.Button == MouseButtons.Left && GetImageSize != null)
+            if (e.Button == MouseButtons.Left && LeftMode == LeftModes.Move &&
+                e.X > 0 && e.X < WindowSize.Width && e.Y > 0 && e.Y < WindowSize.Height)
             {
                 // 图像显示大小和窗口大小的比例
                 double scaleWidth = 1.0 * ImagePart.Width / WindowSize.Width;
@@ -238,7 +262,7 @@ namespace HalconEx.Window
 
                 // 更新显示
                 ClearWindow();
-                UpdateWindow();
+                UpdateWindow?.Invoke();
             }
         }
 
@@ -246,8 +270,7 @@ namespace HalconEx.Window
         private void HalconWindow_MouseWheel(object sender, MouseEventArgs e)
         {
             // 使鼠标位置在窗口内操作有效
-            if (e.X > 0 && e.X < WindowSize.Width && e.Y > 0 && e.Y < WindowSize.Height
-                && GetImageSize != null)
+            if (e.X > 0 && e.X < WindowSize.Width && e.Y > 0 && e.Y < WindowSize.Height)
             {
                 if (imagePartAspectRatio == 0)
                 {
@@ -277,7 +300,7 @@ namespace HalconEx.Window
                 y = (int)(ImagePart.Y - (partHeight - ImagePart.Height) * (1.0 * e.Y / WindowSize.Height));
 
                 // 获取图像大小
-                Size imageSize = GetImageSize();
+                Size imageSize = GetImageSize != null ? GetImageSize() : new Size(21474836, 16106127);
 
                 // 图像显示过大或过小时不再进行缩放
                 if (partWidth < 5 || partHeight < 5 || partWidth > imageSize.Width * 50 || partHeight > imageSize.Height * 50)
@@ -290,7 +313,7 @@ namespace HalconEx.Window
 
                 // 更新显示
                 ClearWindow();
-                UpdateWindow();
+                UpdateWindow?.Invoke();
             }
         }
 
@@ -301,7 +324,7 @@ namespace HalconEx.Window
             {
                 SetImagePart(ImagePart.X, ImagePart.Y, ImagePart.Width, ImagePart.Height);
                 ClearWindow();
-                UpdateWindow();
+                UpdateWindow?.Invoke();
             }
             catch (Exception)
             {
@@ -697,14 +720,14 @@ namespace HalconEx.Window
         {
             SetImagePartStretch();
             ClearWindow();
-            UpdateWindow();
+            UpdateWindow?.Invoke();
         }
 
         private void menuDispAdapt_Click(object sender, EventArgs e)
         {
             SetImagePartAdapt();
             ClearWindow();
-            UpdateWindow();
+            UpdateWindow?.Invoke();
         }
 
         private void tsmiDumpWindow_Click(object sender, EventArgs e)
@@ -724,7 +747,7 @@ namespace HalconEx.Window
             }
 
             ClearWindow();
-            UpdateWindow();
+            UpdateWindow?.Invoke();
         }
 
         private void tsmiDispGrid_Click(object sender, EventArgs e)
@@ -739,7 +762,19 @@ namespace HalconEx.Window
             }
 
             ClearWindow();
-            UpdateWindow();
+            UpdateWindow?.Invoke();
+        }
+
+        private void tsmiLeftMoveMode_Click(object sender, EventArgs e)
+        {
+            if (tsmiLeftMoveMode.Checked)
+            {
+                LeftMode = LeftModes.Select;
+            }
+            else
+            {
+                LeftMode = LeftModes.Move;
+            }
         }
 
         #endregion
@@ -757,5 +792,7 @@ namespace HalconEx.Window
         }
 
         #endregion
+
+
     }
 }
