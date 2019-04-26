@@ -31,6 +31,7 @@ namespace HalconEx.ROI
                 HObject = draw as HObject;
             }
 
+            Type = type;
         }
 
         public Shape(object draw, ShapeTypes type, Operations operation)
@@ -44,6 +45,7 @@ namespace HalconEx.ROI
                 HObject = draw as HObject;
             }
 
+            Type = type;
             Operation = operation;
         }
 
@@ -58,15 +60,16 @@ namespace HalconEx.ROI
                 HObject = draw as HObject;
             }
 
+            Type = type;
             Operation = operation;
-            IsComplement = complement;
+            Complement = complement;
         }
 
         public ShapeTypes Type { get; set; }
 
         public Operations Operation { get; set; }
 
-        public bool IsComplement { get; set; }
+        public bool Complement { get; set; }
 
         public HObject HObject;
 

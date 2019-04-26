@@ -37,8 +37,6 @@
             this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.tspDrawLine = new System.Windows.Forms.ToolStripButton();
             this.tsbDrawCircle = new System.Windows.Forms.ToolStripButton();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.tsbDrawArc = new System.Windows.Forms.ToolStripButton();
             this.tsbDrawEllipse = new System.Windows.Forms.ToolStripButton();
             this.tsbDrawEllipseArc = new System.Windows.Forms.ToolStripButton();
@@ -47,6 +45,10 @@
             this.tsbDrawPolygon = new System.Windows.Forms.ToolStripButton();
             this.tsbDrawNurbs = new System.Windows.Forms.ToolStripButton();
             this.tsbDrawNurbsInterp = new System.Windows.Forms.ToolStripButton();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -62,6 +64,7 @@
             this.treeView1.Name = "treeView1";
             this.treeView1.Size = new System.Drawing.Size(200, 417);
             this.treeView1.TabIndex = 1;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // toolStrip1
             // 
@@ -142,36 +145,6 @@
             this.tsbDrawCircle.Text = "绘制圆形";
             this.tsbDrawCircle.Click += new System.EventHandler(this.tsbDrawCircle_Click);
             // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 25);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.treeView1);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.dataGridView1);
-            this.splitContainer1.Size = new System.Drawing.Size(624, 417);
-            this.splitContainer1.SplitterDistance = 200;
-            this.splitContainer1.TabIndex = 3;
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.BackgroundColor = System.Drawing.Color.White;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowTemplate.Height = 23;
-            this.dataGridView1.Size = new System.Drawing.Size(420, 417);
-            this.dataGridView1.TabIndex = 0;
-            // 
             // tsbDrawArc
             // 
             this.tsbDrawArc.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -230,6 +203,7 @@
             this.tsbDrawPolygon.Name = "tsbDrawPolygon";
             this.tsbDrawPolygon.Size = new System.Drawing.Size(23, 22);
             this.tsbDrawPolygon.Text = "绘制任意区域";
+            this.tsbDrawPolygon.Visible = false;
             this.tsbDrawPolygon.Click += new System.EventHandler(this.tsbDrawPolygon_Click);
             // 
             // tsbDrawNurbs
@@ -240,6 +214,7 @@
             this.tsbDrawNurbs.Name = "tsbDrawNurbs";
             this.tsbDrawNurbs.Size = new System.Drawing.Size(23, 22);
             this.tsbDrawNurbs.Text = "绘制NURBS曲线";
+            this.tsbDrawNurbs.Visible = false;
             this.tsbDrawNurbs.Click += new System.EventHandler(this.tsbDrawNurbs_Click);
             // 
             // tsbDrawNurbsInterp
@@ -250,7 +225,52 @@
             this.tsbDrawNurbsInterp.Name = "tsbDrawNurbsInterp";
             this.tsbDrawNurbsInterp.Size = new System.Drawing.Size(23, 22);
             this.tsbDrawNurbsInterp.Text = "绘制内插的NURBS曲线";
+            this.tsbDrawNurbsInterp.Visible = false;
             this.tsbDrawNurbsInterp.Click += new System.EventHandler(this.tsbDrawNurbsInterp_Click);
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 25);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.treeView1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.dataGridView1);
+            this.splitContainer1.Size = new System.Drawing.Size(624, 417);
+            this.splitContainer1.SplitterDistance = 200;
+            this.splitContainer1.TabIndex = 3;
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colName,
+            this.colValue});
+            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowHeadersVisible = false;
+            this.dataGridView1.RowTemplate.Height = 23;
+            this.dataGridView1.Size = new System.Drawing.Size(420, 417);
+            this.dataGridView1.TabIndex = 0;
+            // 
+            // colName
+            // 
+            this.colName.HeaderText = "名称";
+            this.colName.Name = "colName";
+            // 
+            // colValue
+            // 
+            this.colValue.HeaderText = "数值";
+            this.colValue.Name = "colValue";
             // 
             // ROIForm
             // 
@@ -293,5 +313,7 @@
         private System.Windows.Forms.ToolStripButton tsbDrawPolygon;
         private System.Windows.Forms.ToolStripButton tsbDrawNurbs;
         private System.Windows.Forms.ToolStripButton tsbDrawNurbsInterp;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colValue;
     }
 }
